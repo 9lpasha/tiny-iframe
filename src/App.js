@@ -38,23 +38,35 @@ import 'tinymce/plugins/visualchars/plugin.min';
 import 'tinymce/plugins/wordcount/plugin.min';
 import 'tinymce/plugins/emoticons/js/emojis.min';*/
 
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {tinyEditorConfig} from "./tinyEditorConfig";
 
 const language = 'ru';
 
 function App() {
+  const [onInit, setOnInit] = useState(null);
+  const [editor, setEditor] = useState(null);
 
   useEffect(() => {
     window.addEventListener('message', (e) => {
-      console.log(e);
+      if (e.data.type === 'first') {
+        setOnInit(e.data.main);
+        window.parent.postMessage({type: 'finish', main: 'first'});
+      } else if (e.data.type === 'second') {
+        editor.setContent(e.data.main);
+        window.parent.postMessage({type: 'finish', main: 'second'});
+      }
     })
   }, []);
 
-  return (
+  return onInit && (
       <Editor
           apiKey="f0c7hykjh36wn58hqxn4nrnw74vwkfs016ihzfadwvdqbn6l"
           init={tinyEditorConfig(language)}
+          onInit={(evt, editor) => {
+            onInit(evt, editor);
+            setEditor(editor);
+          }}
           onNodeChange={e => {
             const img = e.element.querySelector('img');
 
