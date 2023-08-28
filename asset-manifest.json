@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/tiny-iframe/static/css/main.064b7761.css",
+    "main.js": "/tiny-iframe/static/js/main.4a55571f.js",
+    "index.html": "/tiny-iframe/index.html",
+    "main.064b7761.css.map": "/tiny-iframe/static/css/main.064b7761.css.map",
+    "main.4a55571f.js.map": "/tiny-iframe/static/js/main.4a55571f.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.064b7761.css",
+    "static/js/main.4a55571f.js"
+  ]
+}
