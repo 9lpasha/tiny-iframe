@@ -50,9 +50,10 @@ function App() {
     if (editor) {
       window.parent.postMessage({type: 'editor_init', main: 'editor'});
       window.addEventListener('message', (e) => {
-         if (e.data.type === 'second') {
-          editor.setContent(e.data.main);
-          window.parent.postMessage({type: 'second', main: 'done'});
+          console.log(e.data);
+          if (e.data.type === 'second') {
+            editor.setContent(e.data.main);
+            window.parent.postMessage({type: 'second', main: 'done'}, '*');
         }
       })
     }
