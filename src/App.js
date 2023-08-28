@@ -44,27 +44,28 @@ import {tinyEditorConfig} from "./tinyEditorConfig";
 const language = 'ru';
 
 function App() {
-  const [onInit, setOnInit] = useState(null);
   const [editor, setEditor] = useState(null);
 
   useEffect(() => {
     window.addEventListener('message', (e) => {
       if (e.data.type === 'first') {
-        setOnInit(e.data.main);
-        window.parent.postMessage({type: 'finish', main: 'first'});
+        if (editor) {
+          window.parent.postMessage({type: 'first', main: JSON.stringify(editor)});
+        } else {
+          window.parent.postMessage({type: 'first'});
+        }
       } else if (e.data.type === 'second') {
         editor.setContent(e.data.main);
-        window.parent.postMessage({type: 'finish', main: 'second'});
+        window.parent.postMessage({type: 'second', main: 'second'});
       }
     })
   }, []);
 
-  return onInit && (
+  return (
       <Editor
           apiKey="f0c7hykjh36wn58hqxn4nrnw74vwkfs016ihzfadwvdqbn6l"
           init={tinyEditorConfig(language)}
           onInit={(evt, editor) => {
-            onInit(evt, editor);
             setEditor(editor);
           }}
           onNodeChange={e => {
