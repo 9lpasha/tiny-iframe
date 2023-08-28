@@ -1,18 +1,13 @@
 import './App.css';
 import {Editor} from "@tinymce/tinymce-react";
 
-import tinymce from 'tinymce/tinymce.min';
-
+/*import tinymce from 'tinymce/tinymce.min';
 import 'tinymce/models/dom/model.min';
 import 'tinymce/themes/silver/theme.min';
-// Toolbar icons
 import 'tinymce/icons/default/icons.min';
-// Editor styles
-import 'tinymce/skins/ui/oxide/skin.min.css';
+import 'tinymce/skins/ui/oxide/skin.min.css';*/
 
-// importing the plugin js.
-// if you use a plugin that is not listed here the editor will fail to load
-import 'tinymce/plugins/advlist/plugin.min';
+/*import 'tinymce/plugins/advlist/plugin.min';
 import 'tinymce/plugins/anchor/plugin.min';
 import 'tinymce/plugins/autolink/plugin.min';
 import 'tinymce/plugins/autoresize/plugin.min';
@@ -41,21 +36,24 @@ import 'tinymce/plugins/template/plugin.min';
 import 'tinymce/plugins/visualblocks/plugin.min';
 import 'tinymce/plugins/visualchars/plugin.min';
 import 'tinymce/plugins/wordcount/plugin.min';
+import 'tinymce/plugins/emoticons/js/emojis.min';*/
 
-// importing plugin resources
-import 'tinymce/plugins/emoticons/js/emojis.min';
 import {useEffect} from "react";
+import {tinyEditorConfig} from "./tinyEditorConfig";
+
+const language = 'ru';
 
 function App() {
 
   useEffect(() => {
     window.addEventListener('message', (e) => {
-      console.log(e)
+      console.log(e);
     })
   }, []);
 
   return (
       <Editor
+          init={tinyEditorConfig(language)}
           onNodeChange={e => {
             const img = e.element.querySelector('img');
 
