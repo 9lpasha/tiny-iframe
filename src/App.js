@@ -44,8 +44,16 @@ import 'tinymce/plugins/wordcount/plugin.min';
 
 // importing plugin resources
 import 'tinymce/plugins/emoticons/js/emojis.min';
+import {useEffect} from "react";
 
 function App() {
+
+  useEffect(() => {
+    window.addEventListener('message', (e) => {
+      console.log(e)
+    })
+  }, []);
+
   return (
       <Editor
           onNodeChange={e => {
