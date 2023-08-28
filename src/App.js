@@ -47,19 +47,16 @@ function App() {
   const [editor, setEditor] = useState(null);
 
   useEffect(() => {
-    window.addEventListener('message', (e) => {
-      if (e.data.type === 'first') {
-        if (editor) {
-          window.parent.postMessage({type: 'first', main: JSON.stringify(editor)});
-        } else {
-          window.parent.postMessage({type: 'first'});
+    if (editor) {
+      window.parent.postMessage({type: 'editor_init', main: 'editor'});
+      window.addEventListener('message', (e) => {
+         if (e.data.type === 'second') {
+          editor.setContent(e.data.main);
+          window.parent.postMessage({type: 'second', main: 'done'});
         }
-      } else if (e.data.type === 'second') {
-        editor.setContent(e.data.main);
-        window.parent.postMessage({type: 'second', main: 'second'});
-      }
-    })
-  }, []);
+      })
+    }
+  }, [editor]);
 
   return (
       <Editor
