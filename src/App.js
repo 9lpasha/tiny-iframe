@@ -48,13 +48,13 @@ function App() {
 
   useEffect(() => {
     if (editor) {
-      window.parent.postMessage(JSON.stringify({type: 'editor_init', main: 'editor'}));
+      window.parent.postMessage({type: 'editor_init', main: 'editor'});
       window.addEventListener('message', (e) => {
           console.log(e.data);
-          const data = JSON.parse(e.data);
+          const data = e.data;
           if (data.type === 'second') {
             editor.setContent(data.main);
-            window.parent.postMessage(JSON.stringify({type: 'second', main: 'done'}), '*');
+            window.parent.postMessage({type: 'second', main: 'done'}, '*');
         }
       })
     }
