@@ -53,6 +53,7 @@ function App() {
 
   return (
       <Editor
+          apiKey="f0c7hykjh36wn58hqxn4nrnw74vwkfs016ihzfadwvdqbn6l"
           init={tinyEditorConfig(language)}
           onNodeChange={e => {
             const img = e.element.querySelector('img');
