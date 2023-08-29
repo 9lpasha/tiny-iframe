@@ -16,6 +16,7 @@ function App() {
 
   useEffect(() => {
     if (editor) {
+      console.log('addEventListener')
       window.addEventListener('message', (e) => {
           const data = e.data;
           console.log(data);
