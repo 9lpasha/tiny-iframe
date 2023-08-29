@@ -51,9 +51,9 @@ function App() {
       window.addEventListener('message', (e) => {
           const data = e.data;
           console.log(data);
-          if (data.type === 'connect') {
+          if (data.type === 'connect' && data.main !== 'done') {
             window.parent.postMessage({type: 'connect', main: 'done'}, '*');
-          } else if (data.type === 'second') {
+          } else if (data.type === 'second' && data.main !== 'done' ) {
             editor.setContent(data.main);
             window.parent.postMessage({type: 'second', main: 'done'}, '*');
           }
