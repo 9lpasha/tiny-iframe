@@ -1,65 +1,44 @@
 import './App.css';
 import {Editor} from "@tinymce/tinymce-react";
 
-/*import tinymce from 'tinymce/tinymce.min';
-import 'tinymce/models/dom/model.min';
-import 'tinymce/themes/silver/theme.min';
-import 'tinymce/icons/default/icons.min';
-import 'tinymce/skins/ui/oxide/skin.min.css';*/
-
-/*import 'tinymce/plugins/advlist/plugin.min';
-import 'tinymce/plugins/anchor/plugin.min';
-import 'tinymce/plugins/autolink/plugin.min';
-import 'tinymce/plugins/autoresize/plugin.min';
-import 'tinymce/plugins/autosave/plugin.min';
-import 'tinymce/plugins/charmap/plugin.min';
-import 'tinymce/plugins/code/plugin.min';
-import 'tinymce/plugins/codesample/plugin.min';
-import 'tinymce/plugins/directionality/plugin.min';
-import 'tinymce/plugins/emoticons/plugin.min';
-import 'tinymce/plugins/fullscreen/plugin.min';
-import 'tinymce/plugins/help/plugin.min';
-import 'tinymce/plugins/image/plugin.min';
-import 'tinymce/plugins/importcss/plugin.min';
-import 'tinymce/plugins/insertdatetime/plugin.min';
-import 'tinymce/plugins/link/plugin.min';
-import 'tinymce/plugins/lists/plugin.min';
-import 'tinymce/plugins/media/plugin.min';
-import 'tinymce/plugins/nonbreaking/plugin.min';
-import 'tinymce/plugins/pagebreak/plugin.min';
-import 'tinymce/plugins/preview/plugin.min';
-import 'tinymce/plugins/quickbars/plugin.min';
-import 'tinymce/plugins/save/plugin.min';
-import 'tinymce/plugins/searchreplace/plugin.min';
-import 'tinymce/plugins/table/plugin.min';
-import 'tinymce/plugins/template/plugin.min';
-import 'tinymce/plugins/visualblocks/plugin.min';
-import 'tinymce/plugins/visualchars/plugin.min';
-import 'tinymce/plugins/wordcount/plugin.min';
-import 'tinymce/plugins/emoticons/js/emojis.min';*/
-
 import {useEffect, useState} from "react";
 import {tinyEditorConfig} from "./tinyEditorConfig";
 
-const language = 'ru';
+let timeout;
 
 function App() {
   const [editor, setEditor] = useState(null);
+  const [language, setLanguage] = useState('en');
+  const [editorValue, setEditorValue] = useState('');
+
+  const postMessage = (data) => {
+    window.parent.postMessage(data, "*");
+  };
 
   useEffect(() => {
     if (editor) {
       window.addEventListener('message', (e) => {
           const data = e.data;
           console.log(data);
-          if (data.type === 'connect' && data.main !== 'done') {
-            window.parent.postMessage({type: 'connect', main: 'done'}, '*');
-          } else if (data.type === 'second' && data.main !== 'done' ) {
-            editor.setContent(data.main);
-            window.parent.postMessage({type: 'second', main: 'done'}, '*');
+          if (data.type === 'connect' && data.value !== 'done') {
+            setLanguage(data.value.language);
+            setEditorValue(data.value.text);
+            postMessage({type: 'connect', value: 'done'});
+          } else if (data.type === 'second' && data.value !== 'done' ) {
+            editor.setContent(data.value);
+            postMessage({type: 'second', value: 'done'});
           }
       })
     }
   }, [editor]);
+
+  const onSubmit = () => {
+    postMessage({type: 'submit', value: editor.getContent()});
+  };
+
+  const toggleFlagForClickOnIframes = () => {
+    postMessage({type: 'toggleFlagForClickOnIframes'});
+  };
 
   return (
       <Editor
@@ -67,7 +46,10 @@ function App() {
           init={tinyEditorConfig(language)}
           onInit={(evt, editor) => {
             setEditor(editor);
+            window.tinymceEditor = editor;
           }}
+          onSubmit={onSubmit}
+          // initialValue={editorValue}
           onNodeChange={e => {
             const img = e.element.querySelector('img');
 
@@ -90,6 +72,14 @@ function App() {
               }
             }
           }}
+          onEditorChange={(value) => {
+            clearTimeout(timeout);
+
+            timeout = setTimeout(() => {
+              postMessage({type: 'save', value});
+            }, 500);
+          }}
+          onClick={toggleFlagForClickOnIframes}
       />
   );
 }

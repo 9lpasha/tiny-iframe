@@ -1,19 +1,8 @@
-/*import { contentCss, contentUiCss } from './tinyEditorStyles';*/
-/*import './ru';*/
-
 export const tinyEditorConfig = (lang) => {
-  const languageFields = {};
-
-  if (lang === 'ru') {
-    languageFields.language_url = './ru.js';
-    languageFields.language = 'ru';
-  }
 
   return {
-    /*...languageFields,*/
     apiKey: "f0c7hykjh36wn58hqxn4nrnw74vwkfs016ihzfadwvdqbn6l",
     browser_spellcheck: true,
-    /*skin: false,*/
     font_family_formats:
       "Open Sans=Open Sans, sans-serif; Andale Mono=andale mono,times; Arial=arial,helvetica,sans-serif; Arial Black=arial black,avant garde; Book Antiqua=book antiqua,palatino; Comic Sans MS=comic sans ms,sans-serif; Courier New=courier new,courier; Georgia=georgia,palatino; Helvetica=helvetica; Impact=impact,chicago; Symbol=symbol; Tahoma=tahoma,arial,helvetica,sans-serif; Terminal=terminal,monaco; Times New Roman=times new roman,times; Trebuchet MS=trebuchet ms,geneva; Verdana=verdana,geneva; Webdings=webdings; Wingdings=wingdings,zapf dingbats'",
     content_css: false,
@@ -23,7 +12,6 @@ export const tinyEditorConfig = (lang) => {
     image_title: true,
     menubar: false,
     statusbar: false,
-    /*promotion: false,*/
     draggable_modal: true,
     image_advtab: true,
     image_caption: true,
@@ -44,7 +32,6 @@ export const tinyEditorConfig = (lang) => {
       'emoticons charmap | removeformat code',
     quickbars_insert_toolbar: false,
     content_style:
-      /*`${contentCss.toString()}\n${contentUiCss.toString()}\n` +*/
       'p {\n' +
       '      margin: 0 0 10px!important;\n' +
       '    }\n' +
@@ -214,11 +201,6 @@ export const tinyEditorConfig = (lang) => {
         const reader = new FileReader();
 
         reader.addEventListener('load', () => {
-          /*
-                      Note: Now we need to register the blob in TinyMCEs image blob
-                      registry. In the next release this part hopefully won't be
-                      necessary, as we are looking to handle it internally.
-                    */
           const id = `blobid${new Date().getTime()}`;
           const blobCache = window.tinymceEditor.editorUpload.blobCache;
           const base64 = reader.result.split(',')[1];
@@ -226,7 +208,6 @@ export const tinyEditorConfig = (lang) => {
 
           blobCache.add(blobInfo);
 
-          /* call the callback and populate the Title field with the file name */
           cb(blobInfo.blobUri(), { title: file.name });
         });
         reader.readAsDataURL(file);
