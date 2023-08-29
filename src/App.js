@@ -48,14 +48,14 @@ function App() {
 
   useEffect(() => {
     if (editor) {
-      window.parent.postMessage({type: 'editor_init', main: 'editor'});
       window.addEventListener('message', (e) => {
-          console.log(e.data);
           const data = e.data;
-          if (data.type === 'second') {
+          if (data.type === 'connect') {
+            window.parent.postMessage({type: 'connect', main: 'done'}, '*');
+          } else if (data.type === 'second') {
             editor.setContent(data.main);
             window.parent.postMessage({type: 'second', main: 'done'}, '*');
-        }
+          }
       })
     }
   }, [editor]);
