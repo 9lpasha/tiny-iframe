@@ -9,7 +9,6 @@ let timeout;
 function App() {
   const [editor, setEditor] = useState(null);
   const [language, setLanguage] = useState('en');
-  const [editorValue, setEditorValue] = useState('');
 
   const postMessage = (data) => {
     window.parent.postMessage(data, "*");
@@ -22,11 +21,12 @@ function App() {
           console.log(data);
           if (data.type === 'connect' && data.value !== 'done') {
             setLanguage(data.value.language);
-            setEditorValue(data.value.text);
+            editor.setContent(data.value.text);
             postMessage({type: 'connect', value: 'done'});
-          } else if (data.type === 'second' && data.value !== 'done' ) {
+          } else if (data.type === 'remove') {
+            editor.remove();
+          } else if (data.type === 'setContent') {
             editor.setContent(data.value);
-            postMessage({type: 'second', value: 'done'});
           }
       })
     }
@@ -40,45 +40,50 @@ function App() {
     postMessage({type: 'toggleFlagForClickOnIframes'});
   };
 
+  const onNodeChange = e => {
+    const img = e.element.querySelector('img');
+
+    if (img && (!img.nextElementSibling/*  || img.nextElementSibling && img.nextElementSibling.tagName !== 'BR'*/)) {
+      const br = document.createElement('br');
+
+      if (img.nextElementSibling) {
+        img.parentNode.insertBefore(br, img.nextElementSibling);
+      } else {
+        img.parentNode.appendChild(br);
+      }
+    }
+    if (img && img.style.float !== 'left') {
+      const p = document.createElement('p');
+      const br = document.createElement('br');
+
+      p.appendChild(br);
+      if (!e.element.nextSibling) {
+        e.element.parentNode.appendChild(p);
+      }
+    }
+  };
+
+  const onEditorChange = value => {
+    clearTimeout(timeout);
+
+    timeout = setTimeout(() => {
+      postMessage({type: 'save', value});
+    }, 500);
+  };
+
+  const onInit = (evt, editor) => {
+    setEditor(editor);
+    window.tinymceEditor = editor;
+  };
+
   return (
       <Editor
           apiKey="f0c7hykjh36wn58hqxn4nrnw74vwkfs016ihzfadwvdqbn6l"
           init={tinyEditorConfig(language)}
-          onInit={(evt, editor) => {
-            setEditor(editor);
-            window.tinymceEditor = editor;
-          }}
+          onInit={onInit}
           onSubmit={onSubmit}
-          // initialValue={editorValue}
-          onNodeChange={e => {
-            const img = e.element.querySelector('img');
-
-            if (img && (!img.nextElementSibling/*  || img.nextElementSibling && img.nextElementSibling.tagName !== 'BR'*/)) {
-              const br = document.createElement('br');
-
-              if (img.nextElementSibling) {
-                img.parentNode.insertBefore(br, img.nextElementSibling);
-              } else {
-                img.parentNode.appendChild(br);
-              }
-            }
-            if (img && img.style.float !== 'left') {
-              const p = document.createElement('p');
-              const br = document.createElement('br');
-
-              p.appendChild(br);
-              if (!e.element.nextSibling) {
-                e.element.parentNode.appendChild(p);
-              }
-            }
-          }}
-          onEditorChange={(value) => {
-            clearTimeout(timeout);
-
-            timeout = setTimeout(() => {
-              postMessage({type: 'save', value});
-            }, 500);
-          }}
+          onNodeChange={onNodeChange}
+          onEditorChange={onEditorChange}
           onClick={toggleFlagForClickOnIframes}
       />
   );
