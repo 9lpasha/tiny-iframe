@@ -50,6 +50,7 @@ function App() {
     if (editor) {
       window.addEventListener('message', (e) => {
           const data = e.data;
+          console.log(data);
           if (data.type === 'connect') {
             window.parent.postMessage({type: 'connect', main: 'done'}, '*');
           } else if (data.type === 'second') {
