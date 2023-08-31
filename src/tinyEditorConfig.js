@@ -63,7 +63,7 @@ export const tinyEditorConfig = (lang) => {
       '    background-color: #4acc8e;\n' +
       '    margin: auto 0;\n' +
       '    position: absolute;' +
-      '    transform: translate(-16px, 7px);' +
+      '    transform: translate(-16px, 5px);' +
       '}\n' +
       'ul[style*=square] li::before {\n' +
       '    content: ""!important;\n' +
@@ -75,7 +75,7 @@ export const tinyEditorConfig = (lang) => {
       '    background-color: #4acc8e!important;\n' +
       '    margin: auto 0;\n' +
       '    position: absolute;' +
-      '    transform: translate(-16px, 7px);' +
+      '    transform: translate(-16px, 5px);' +
       '}\n' +
       'ul[style*=circle] li::before {\n' +
       '    content: ""!important;\n' +
@@ -88,7 +88,7 @@ export const tinyEditorConfig = (lang) => {
       '    background-color: white!important;\n' +
       '    margin: auto 0;\n' +
       '    position: absolute;' +
-      '    transform: translate(-16px, 6px);' +
+      '    transform: translate(-16px, 4px);' +
       '}\n' +
       '\n' +
       'ul li h1, ul li h2, ul li h3, ul li h4, ul li h5, ul li h6, ul li h7, ul li pre, ul li p, ul li * {\n' +
@@ -130,7 +130,7 @@ export const tinyEditorConfig = (lang) => {
       '    background-color: #4acc8e;\n' +
       '    margin: auto 0;\n' +
       '    position: absolute;' +
-      '    transform: translate(-16px, 7px);' +
+      '    transform: translate(-16px, 5px);' +
       '}\n' +
       '\n' +
       'ul:not(ul[style^=list-style-type]) li li li::before {\n' +
@@ -144,7 +144,7 @@ export const tinyEditorConfig = (lang) => {
       '    background-color: white;\n' +
       '    margin: auto 0;\n' +
       '    position: absolute;' +
-      '    transform: translate(-16px, 6px);' +
+      '    transform: translate(-16px, 4px);' +
       '}\n' +
       '\n' +
       'ul li[style^=list-style-type]::before {\n' +
