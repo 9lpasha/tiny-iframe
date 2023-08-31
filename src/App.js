@@ -19,13 +19,13 @@ function App() {
       window.addEventListener('message', (e) => {
           const data = e.data;
           if (data.type === 'connect' && data.value !== 'done') {
+            console.log(data)
             setLanguage(data.value.language);
             editor.setContent(data.value.text);
             postMessage({type: 'connect', value: 'done'});
           } else if (data.type === 'remove') {
+            console.log(data)
             editor.remove();
-          } else if (data.type === 'setContent') {
-            editor.setContent(data.value);
           }
       })
     }
