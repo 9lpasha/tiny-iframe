@@ -2,37 +2,32 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.tox-statusbar__path-item {
+  display: none !important;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.tox-statusbar__branding {
+  display: none !important;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+li:has(li::before) {
+  height: max-content;
 }
 
-.App-link {
-  color: #61dafb;
+.tox-tinymce{
+  border: unset!important;
+  border-radius: 4px!important;
+  height: 100% !important;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.tox-tinymce-files-1 {
+  height: calc(100% - 48px) !important;
+}
+.tox-tinymce-files-2 {
+  height: calc(100% - 104px) !important;
+}
+
+.tox:not(.tox-tinymce-inline) .tox-editor-header {
+  border-bottom: 1px solid #E2E5E9!important;
+  box-shadow: none!important;
 }
