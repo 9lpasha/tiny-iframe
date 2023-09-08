@@ -41,8 +41,8 @@ function App() {
   useEffect(() => {
     window.addEventListener('message', (e) => {
       const data = e.data;
+      console.log(data)
       if (data.type === 'connect' && data.value !== 'done') {
-        console.log(data)
         setIsConnected(true);
         setLanguage(data.value.language);
         editor ? editor.setContent(data.value.text) : setContent(data.value.text);
