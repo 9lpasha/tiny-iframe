@@ -26,7 +26,7 @@ function App() {
             // изменение высота, на которую влияют файлы
             const node = document.querySelector('.tox-tinymce');
             // eslint-disable-next-line no-magic-numbers
-            const n = data.files ? data.files.length : 0;
+            const n = data.value.files ? data.value.files.length : 0;
 
             if (node) {
               const classText = 'tox-tinymce-files';
