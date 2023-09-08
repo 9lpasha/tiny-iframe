@@ -39,6 +39,7 @@ function App() {
   }, [editor]);
 
   useEffect(() => {
+    console.log('message')
     window.addEventListener('message', (e) => {
       const data = e.data;
       console.log(data)
