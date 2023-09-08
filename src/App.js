@@ -48,6 +48,10 @@ function App() {
         setLanguage(data.value.language);
         editor ? editor.setContent(data.value.text) : setContent(data.value.text);
 
+        console.log(editor);
+        console.log(editor.getContent());
+        console.log(content);
+
         // изменение высоты, на которую влияют файлы
         const node = document.querySelector('.tox-tinymce');
 
