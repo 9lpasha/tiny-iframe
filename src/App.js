@@ -127,7 +127,7 @@ function App() {
           onEditorChange={onEditorChange}
           onClick={toggleFlagForClickOnIframes}
       />
-  ) : null;
+  ) : <div/>;
 }
 
 export default App;
