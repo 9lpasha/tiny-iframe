@@ -40,6 +40,7 @@ function App() {
 
   useEffect(() => {
     console.log('message')
+    console.log(window.parent)
     const messageHandler = (e) => {
       const data = e.data;
       console.log(data)
@@ -81,7 +82,7 @@ function App() {
     return () => {
       window.removeEventListener('message', messageHandler);
     }
-  }, [editor]);
+  }, [editor, window.parent]);
 
   const onSubmit = () => {
     postMessage({type: 'submit', value: editor.getContent()});
