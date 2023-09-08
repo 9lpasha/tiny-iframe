@@ -46,11 +46,6 @@ function App() {
       if (data.type === 'connect' && data.value !== 'done') {
         setIsConnected(true);
         setLanguage(data.value.language);
-        editor ? editor.setContent(data.value.text) : setContent(data.value.text);
-
-        console.log(editor);
-        console.log(editor.getContent());
-        console.log(content);
 
         // изменение высоты, на которую влияют файлы
         const node = document.querySelector('.tox-tinymce');
@@ -70,13 +65,18 @@ function App() {
             }
           }
         }
+
+        editor ? editor.setContent(data.value.text) : setContent(data.value.text);
         postMessage({type: 'connect', value: 'done'});
       } else if (data.type === 'remove') {
         console.log(data)
         editor.remove();
       }
     };
-    window.addEventListener('message', messageHandler);
+
+    setTimeout(() => {
+      window.addEventListener('message', messageHandler);
+    }, 1000);
 
     return () => {
       window.removeEventListener('message', messageHandler);
