@@ -28,7 +28,7 @@ function App() {
       if (node) {
         const classText = 'tox-tinymce-files';
 
-        if (files !== 0) {
+        if (n !== 0) {
           node.classList.add(`${n >= 2 ? `${classText}-2` : n === 1 ? `${classText}-1` : ''}`);
           node.classList.remove(`${n >= 2 ? `${classText}-1` : n === 1 ? `${classText}-2` : ''}`)
         } else {
