@@ -9,6 +9,9 @@ let timeout;
 function App() {
   const [editor, setEditor] = useState(null);
   const [language, setLanguage] = useState('en');
+  const [isConnected, setIsConnected] = useState(false);
+  const [content, setContent] = useState('');
+  const [files, setFiles] = useState(0);
 
   const postMessage = (data) => {
     window.parent.postMessage(data, "*");
@@ -16,35 +19,59 @@ function App() {
 
   useEffect(() => {
     if (editor) {
-      window.addEventListener('message', (e) => {
-          const data = e.data;
-          if (data.type === 'connect' && data.value !== 'done') {
-            console.log(data)
-            setLanguage(data.value.language);
-            editor.setContent(data.value.text);
+      editor.setContent(content);
 
-            // изменение высота, на которую влияют файлы
-            const node = document.querySelector('.tox-tinymce');
-            const n = data.value.files ? data.value.files.length : 0;
+      // изменение высота, на которую влияют файлы
+      const node = document.querySelector('.tox-tinymce');
+      const n = files ? files.length : 0;
 
-            if (node) {
-              const classText = 'tox-tinymce-files';
+      if (node) {
+        const classText = 'tox-tinymce-files';
 
-              if (n !== 0) {
-                node.classList.add(`${n >= 2 ? `${classText}-2` : n === 1 ? `${classText}-1` : ''}`);
-                node.classList.remove(`${n >= 2 ? `${classText}-1` : n === 1 ? `${classText}-2` : ''}`)
-              } else {
-                node.classList.remove(`${classText}-2`, `${classText}-1`)
-              }
-            }
-            postMessage({type: 'connect', value: 'done'});
-          } else if (data.type === 'remove') {
-            console.log(data)
-            editor.remove();
-          }
-      })
+        if (files !== 0) {
+          node.classList.add(`${n >= 2 ? `${classText}-2` : n === 1 ? `${classText}-1` : ''}`);
+          node.classList.remove(`${n >= 2 ? `${classText}-1` : n === 1 ? `${classText}-2` : ''}`)
+        } else {
+          node.classList.remove(`${classText}-2`, `${classText}-1`)
+        }
+      }
     }
   }, [editor]);
+
+  useEffect(() => {
+    window.addEventListener('message', (e) => {
+      const data = e.data;
+      if (data.type === 'connect' && data.value !== 'done') {
+        console.log(data)
+        setIsConnected(true);
+        setLanguage(data.value.language);
+        editor ? editor.setContent(data.value.text) : setContent(data.value.text);
+
+        // изменение высота, на которую влияют файлы
+        const node = document.querySelector('.tox-tinymce');
+
+        setFiles(data.value.files);
+        if (node) {
+          const n = data.value.files ? data.value.files.length : 0;
+
+          if (node) {
+            const classText = 'tox-tinymce-files';
+
+            if (n !== 0) {
+              node.classList.add(`${n >= 2 ? `${classText}-2` : n === 1 ? `${classText}-1` : ''}`);
+              node.classList.remove(`${n >= 2 ? `${classText}-1` : n === 1 ? `${classText}-2` : ''}`)
+            } else {
+              node.classList.remove(`${classText}-2`, `${classText}-1`)
+            }
+          }
+        }
+        postMessage({type: 'connect', value: 'done'});
+      } else if (data.type === 'remove') {
+        console.log(data)
+        editor.remove();
+      }
+    })
+  }, []);
 
   const onSubmit = () => {
     postMessage({type: 'submit', value: editor.getContent()});
@@ -90,7 +117,7 @@ function App() {
     window.tinymceEditor = editor;
   };
 
-  return (
+  return isConnected ? (
       <Editor
           apiKey="f0c7hykjh36wn58hqxn4nrnw74vwkfs016ihzfadwvdqbn6l"
           init={tinyEditorConfig(language)}
@@ -100,7 +127,7 @@ function App() {
           onEditorChange={onEditorChange}
           onClick={toggleFlagForClickOnIframes}
       />
-  );
+  ) : null;
 }
 
 export default App;
