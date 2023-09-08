@@ -40,7 +40,6 @@ function App() {
 
   useEffect(() => {
     console.log('message')
-    console.log(window.parent)
     const messageHandler = (e) => {
       const data = e.data;
       console.log(data)
@@ -75,14 +74,10 @@ function App() {
       }
     };
 
-    setTimeout(() => {
+    document.addEventListener('DOMContentLoaded', () => {
       window.addEventListener('message', messageHandler);
-    }, 1000);
-
-    return () => {
-      window.removeEventListener('message', messageHandler);
-    }
-  }, [editor, window.parent]);
+    })
+  }, [editor]);
 
   const onSubmit = () => {
     postMessage({type: 'submit', value: editor.getContent()});
