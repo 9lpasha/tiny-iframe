@@ -1,4 +1,5 @@
 export const tinyEditorConfig = (language) => {
+  console.log(language);
 
   return {
     apiKey: "f0c7hykjh36wn58hqxn4nrnw74vwkfs016ihzfadwvdqbn6l",
