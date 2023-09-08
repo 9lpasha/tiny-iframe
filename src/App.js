@@ -25,18 +25,16 @@ function App() {
 
             // изменение высота, на которую влияют файлы
             const node = document.querySelector('.tox-tinymce');
-            // eslint-disable-next-line no-magic-numbers
             const n = data.value.files ? data.value.files.length : 0;
 
             if (node) {
               const classText = 'tox-tinymce-files';
 
               if (n !== 0) {
-                // eslint-disable-next-line no-magic-numbers
                 node.classList.add(`${n >= 2 ? `${classText}-2` : n === 1 ? `${classText}-1` : ''}`);
                 node.classList.remove(`${n >= 2 ? `${classText}-1` : n === 1 ? `${classText}-2` : ''}`)
               } else {
-                node.classList.remove([`${classText}-2`, `${classText}-1`])
+                node.classList.remove(`${classText}-2`, `${classText}-1`)
               }
             }
             postMessage({type: 'connect', value: 'done'});
