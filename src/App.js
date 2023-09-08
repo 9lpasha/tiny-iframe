@@ -40,7 +40,7 @@ function App() {
 
   useEffect(() => {
     console.log('message')
-    window.addEventListener('message', (e) => {
+    const messageHandler = (e) => {
       const data = e.data;
       console.log(data)
       if (data.type === 'connect' && data.value !== 'done') {
@@ -48,7 +48,7 @@ function App() {
         setLanguage(data.value.language);
         editor ? editor.setContent(data.value.text) : setContent(data.value.text);
 
-        // изменение высота, на которую влияют файлы
+        // изменение высоты, на которую влияют файлы
         const node = document.querySelector('.tox-tinymce');
 
         setFiles(data.value.files);
@@ -71,8 +71,13 @@ function App() {
         console.log(data)
         editor.remove();
       }
-    })
-  }, []);
+    };
+    window.addEventListener('message', messageHandler);
+
+    return () => {
+      window.removeEventListener('message', messageHandler);
+    }
+  }, [editor]);
 
   const onSubmit = () => {
     postMessage({type: 'submit', value: editor.getContent()});
