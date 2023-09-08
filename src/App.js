@@ -73,10 +73,7 @@ function App() {
         editor.remove();
       }
     };
-
-    document.addEventListener('DOMContentLoaded', () => {
-      window.addEventListener('message', messageHandler);
-    })
+    window.addEventListener('message', messageHandler);
   }, [editor]);
 
   const onSubmit = () => {
