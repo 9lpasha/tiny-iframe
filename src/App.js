@@ -46,26 +46,7 @@ function App() {
       if (data.type === 'connect' && data.value !== 'done') {
         setIsConnected(true);
         setLanguage(data.value.language);
-
-        // изменение высоты, на которую влияют файлы
-        const node = document.querySelector('.tox-tinymce');
-
         setFiles(data.value.files);
-        if (node) {
-          const n = data.value.files ? data.value.files.length : 0;
-
-          if (node) {
-            const classText = 'tox-tinymce-files';
-
-            if (n !== 0) {
-              node.classList.add(`${n >= 2 ? `${classText}-2` : n === 1 ? `${classText}-1` : ''}`);
-              node.classList.remove(`${n >= 2 ? `${classText}-1` : n === 1 ? `${classText}-2` : ''}`)
-            } else {
-              node.classList.remove(`${classText}-2`, `${classText}-1`)
-            }
-          }
-        }
-
         editor ? editor.setContent(data.value.text) : setContent(data.value.text);
         postMessage({type: 'connect', value: 'done'});
       } else if (data.type === 'remove') {
