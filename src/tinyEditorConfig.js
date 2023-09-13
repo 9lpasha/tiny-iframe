@@ -2,7 +2,6 @@ export const tinyEditorConfig = (language) => {
   console.log(language);
 
   return {
-    apiKey: "wbp8d2jxqdp1xqhqqwxgmceysso4wvkn1apt5pfjqcyqbdbb",
     browser_spellcheck: true,
     language,
     font_family_formats:
