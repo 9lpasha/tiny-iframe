@@ -42,9 +42,9 @@ function App() {
     const messageHandler = (e) => {
       const data = e.data;
       if (data.type === 'connect' && data.value !== 'done') {
-        setIsConnected(true);
-        setLanguage(data.value.language);
         setFiles(data.value.files);
+        setLanguage(data.value.language);
+        setIsConnected(true);
         editor ? editor.setContent(data.value.text) : setContent(data.value.text);
         postMessage({type: 'connect', value: 'done'});
       } else if (data.type === 'remove') {
