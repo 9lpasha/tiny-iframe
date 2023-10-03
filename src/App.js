@@ -99,6 +99,7 @@ function App() {
   };
 
   console.log(files)
+  console.log(editor)
 
   return isConnected ? (
       <Editor
