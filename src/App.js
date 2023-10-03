@@ -15,7 +15,7 @@ const onResize = () => {
   } else {
     const newcss = document.createElement('style');
 
-    newcss.innerHTML = newcss.innerHTML + '\n.tox-menu {' + maxHeightToxMenu + 'px!important;}';
+    newcss.innerHTML = newcss.innerHTML + '\n.tox-menu {max-height: ' + maxHeightToxMenu + 'px!important;}';
     document.head.appendChild(newcss);
   }
 }
