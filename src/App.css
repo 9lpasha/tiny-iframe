@@ -24,13 +24,6 @@ li:has(li::before) {
   height: 100% !important;
 }
 
-/*.tox-tinymce-files-1 {
-  height: calc(100% - 48px) !important;
-}
-.tox-tinymce-files-2 {
-  height: calc(100% - 104px) !important;
-}*/
-
 .tox:not(.tox-tinymce-inline) .tox-editor-header {
   border-bottom: 1px solid #E2E5E9!important;
   box-shadow: none!important;

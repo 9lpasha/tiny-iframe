@@ -1,5 +1,4 @@
 export const tinyEditorConfig = (language, filesLength) => {
-  console.log(filesLength)
   return {
     browser_spellcheck: true,
     language,
