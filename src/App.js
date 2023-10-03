@@ -11,7 +11,14 @@ const onResize = () => {
   const maxHeightToxMenu = application.clientHeight - 170;
   const css = document.getElementsByTagName('style');
 
-  css[css.length - 1].innerHTML = css[css.length - 1].innerHTML + '\n.tox-menu {' + maxHeightToxMenu + 'px;!important}';
+  if (css.length) {
+    css[css.length - 1].innerHTML = css[css.length - 1].innerHTML + '\n.tox-menu {' + maxHeightToxMenu + 'px!important;}';
+  } else {
+    const newcss = document.createElement('css');
+
+    newcss.innerHTML = newcss.innerHTML + '\n.tox-menu {' + maxHeightToxMenu + 'px!important;}';
+    document.head.appendChild(newcss);
+  }
 }
 
 window.addEventListener('resize', onResize);
