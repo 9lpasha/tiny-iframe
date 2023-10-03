@@ -98,6 +98,8 @@ function App() {
     window.tinymceEditor = editor;
   };
 
+  console.log(files)
+
   return isConnected ? (
       <Editor
           apiKey="fuap8hv77ephh20hmfv8azp7l6itmzzdr7dddh0y9dv2rwq3"
