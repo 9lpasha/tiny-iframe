@@ -25,10 +25,10 @@ li:has(li::before) {
 }
 
 .tox-tinymce-files-1 {
-  height: 29px !important;
+  padding: 29px !important;
 }
 .tox-tinymce-files-2 {
-  height: 75px !important;
+  padding: 75px !important;
 }
 
 .tox:not(.tox-tinymce-inline) .tox-editor-header {
