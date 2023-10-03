@@ -54,6 +54,12 @@ function App() {
     window.addEventListener('message', messageHandler);
   }, [editor]);
 
+  useEffect(() => {
+    if (editor) {
+      editor.doc.body.className = files?.length >= 2 ? 'files-2' : files?.length === 1 ? 'files-1' : ''
+    }
+  }, [files, editor]);
+
   const onSubmit = () => {
     postMessage({type: 'submit', value: editor.getContent()});
   };

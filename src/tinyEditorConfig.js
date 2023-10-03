@@ -174,6 +174,8 @@ export const tinyEditorConfig = (language, filesLength) => {
       '  background-color: rgba(0, 0, 0, 0.5);\n' +
       '  -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);\n' +
       '}' +
+      'body.files-2 { padding-bottom: 75px; }' +
+      'body.files-1 { padding-bottom: 29px; }' +
       'body { font-family: Open Sans, sans-serif; }' +
       'p {\n' +
       '  display: block;\n' +
