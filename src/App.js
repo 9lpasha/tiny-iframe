@@ -39,10 +39,8 @@ function App() {
   }, [editor]);
 
   useEffect(() => {
-    console.log('message')
     const messageHandler = (e) => {
       const data = e.data;
-      console.log(data)
       if (data.type === 'connect' && data.value !== 'done') {
         setIsConnected(true);
         setLanguage(data.value.language);
@@ -50,7 +48,6 @@ function App() {
         editor ? editor.setContent(data.value.text) : setContent(data.value.text);
         postMessage({type: 'connect', value: 'done'});
       } else if (data.type === 'remove') {
-        console.log(data)
         editor.remove();
       }
     };
@@ -104,7 +101,7 @@ function App() {
   return isConnected ? (
       <Editor
           apiKey="wbp8d2jxqdp1xqhqqwxgmceysso4wvkn1apt5pfjqcyqbdbb"
-          init={tinyEditorConfig(language)}
+          init={tinyEditorConfig(language, files ? files.length : 0)}
           onInit={onInit}
           onSubmit={onSubmit}
           onNodeChange={onNodeChange}

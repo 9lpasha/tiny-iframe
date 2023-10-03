@@ -1,6 +1,4 @@
-export const tinyEditorConfig = (language) => {
-  console.log(language);
-
+export const tinyEditorConfig = (language, filesLength) => {
   return {
     browser_spellcheck: true,
     language,
@@ -163,6 +161,7 @@ export const tinyEditorConfig = (language) => {
       '    min-height: 100%;' +
       '    position: relative;' +
       '    margin: 16px 16px' +
+      '    padding-bottom: ' + (filesLength >= 2 ? '75px' : '29px') +
       '}' +
       '::-webkit-scrollbar {\n' +
       '  -webkit-appearance: none;\n' +
