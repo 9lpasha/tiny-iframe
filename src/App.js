@@ -55,10 +55,10 @@ function App() {
   }, [editor]);
 
   useEffect(() => {
-    if (editor) {
+    if (editor && editor.dom.doc) {
       editor.dom.doc.body.className = files?.length >= 2 ? 'files-2' : files?.length === 1 ? 'files-1' : ''
     }
-  }, [files, editor]);
+  }, [files, editor, editor?.dom?.doc]);
 
   const onSubmit = () => {
     postMessage({type: 'submit', value: editor.getContent()});
