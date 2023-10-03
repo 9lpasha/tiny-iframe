@@ -55,6 +55,7 @@ function App() {
   }, [editor]);
 
   useEffect(() => {
+    console.log(files)
     if (editor && editor.dom.doc) {
       editor.dom.doc.body.className = files?.length >= 2 ? 'files-2' : files?.length === 1 ? 'files-1' : ''
     }
