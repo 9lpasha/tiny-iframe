@@ -161,7 +161,7 @@ export const tinyEditorConfig = (language, filesLength) => {
       'body{' +
       '    min-height: 100%;' +
       '    position: relative;' +
-      '    margin: 16px 16px' +
+      '    margin: 16px 16px;' +
       '    padding-bottom: ' + (filesLength >= 2 ? '75px' : filesLength === 1 ? '29px' : '0px') +
       '}' +
       '::-webkit-scrollbar {\n' +
