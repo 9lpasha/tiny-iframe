@@ -7,13 +7,13 @@ import {tinyEditorConfig} from "./tinyEditorConfig";
 let timeout;
 
 const onResize = () => {
-  const maxHeightToxMenu = document.body.clientHeight - 170;
+  const maxHeightToxMenu = document.body.clientHeight - 175;
   const css = document.getElementsByTagName('style');
 
   if (css.length) {
     css[css.length - 1].innerHTML = css[css.length - 1].innerHTML + '\n.tox-menu {' + maxHeightToxMenu + 'px!important;}';
   } else {
-    const newcss = document.createElement('css');
+    const newcss = document.createElement('style');
 
     newcss.innerHTML = newcss.innerHTML + '\n.tox-menu {' + maxHeightToxMenu + 'px!important;}';
     document.head.appendChild(newcss);
