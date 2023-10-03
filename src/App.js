@@ -64,6 +64,8 @@ function App() {
         setIsConnected(true);
         editor ? editor.setContent(data.value.text) : setContent(data.value.text);
         postMessage({type: 'connect', value: 'done'});
+      } else if (data.type === 'changeFiles') {
+        setFiles(data.value);
       } else if (data.type === 'remove') {
         editor.remove();
       }
