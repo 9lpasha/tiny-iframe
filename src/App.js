@@ -7,8 +7,7 @@ import {tinyEditorConfig} from "./tinyEditorConfig";
 let timeout;
 
 const onResize = () => {
-  const application = document.querySelector('tox-tinymce');
-  const maxHeightToxMenu = application.clientHeight - 170;
+  const maxHeightToxMenu = document.body.clientHeight - 170;
   const css = document.getElementsByTagName('style');
 
   if (css.length) {
