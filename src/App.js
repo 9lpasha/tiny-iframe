@@ -22,6 +22,7 @@ const onResize = () => {
 }
 
 window.addEventListener('resize', onResize);
+onResize();
 
 function App() {
   const [editor, setEditor] = useState(null);
