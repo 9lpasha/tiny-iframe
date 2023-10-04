@@ -125,7 +125,7 @@ function App() {
 
   return isConnected ? (
       <Editor
-          apiKey="fuap8hv77ephh20hmfv8azp7l6itmzzdr7dddh0y9dv2rwq3"
+          apiKey="nbwuxkn96vt295l4ltn1cgpvi3ytgnkgofk4dr3owmu7pg1u" // fuap8hv77ephh20hmfv8azp7l6itmzzdr7dddh0y9dv2rwq3 работающий
           init={tinyEditorConfig(language, files ? files.length : 0)}
           onInit={onInit}
           onSubmit={onSubmit}
