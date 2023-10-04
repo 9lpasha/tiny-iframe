@@ -25,8 +25,8 @@ build docker image:
     - IMAGE_TAG=$(curl http://gitlab.dev.iss.digital/ci-tools/common/-/raw/master/get-docker-image-name-from-branch.sh | bash)
     - FULL_IMAGE_NAME=${DOCKER_IMAGE_NAME}:${IMAGE_TAG}
     - echo $FULL_IMAGE_NAME
-    - docker run --dns=8.8.8.8 -v $(pwd):/www -w /www --rm node:18-alpine3.18 npm i
-    - docker run --dns=8.8.8.8 -v $(pwd):/www -w /www --rm node:18-alpine3.18 npm run build
+    - docker run --dns=8.8.8.8 -v $(pwd):/www -w /www --rm harbor.dev.socialsys.ru/public/node:18.17.0-alpine3.18 npm i
+    - docker run --dns=8.8.8.8 -v $(pwd):/www -w /www --rm harbor.dev.socialsys.ru/public/node:18.17.0-alpine3.18 npm run build
     - docker build --pull -t ${FULL_IMAGE_NAME} --label "git.hash=$CI_COMMIT_SHA" --label "git.branch=$CI_COMMIT_BRANCH" .
     - docker push ${FULL_IMAGE_NAME}
     - docker rmi ${FULL_IMAGE_NAME}
