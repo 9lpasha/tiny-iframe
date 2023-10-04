@@ -75,7 +75,11 @@ function App() {
 
   useEffect(() => {
     if (editor && editor.dom.doc) {
-      editor.dom.doc.body.className = files?.length >= 2 ? 'files-2' : files?.length === 1 ? 'files-1' : ''
+      editor.dom.doc.body.classList.remove('files-2');
+      editor.dom.doc.body.classList.remove('files-1');
+      if (files?.length >= 1) {
+        editor.dom.doc.body.classList.add(files?.length >= 2 ? 'files-2' : 'files-1');
+      }
     }
   }, [files, editor, editor?.dom?.doc]);
 
