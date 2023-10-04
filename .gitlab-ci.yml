@@ -4,6 +4,9 @@ stages:
 
 variables:
   DOCKER_IMAGE_NAME: harbor.dev.socialsys.ru/happydesk/tiny-mce-editor
+  DOCKER_HUB_USER: ${HARBOR_USER}
+  DOCKER_HUB_PASSWORD: ${HARBOR_PASSWORD}
+
   
 # билд и пуш докер образа
 build docker image:
@@ -19,9 +22,8 @@ build docker image:
   tags:
     - docker-build-runner
   script:
-    - git pull origin master
-    - IMAGE_TAG=$(curl http://gitlab.dev.iss.digital/ci-tools/common/-/raw/master/get-docker-image-name-from-branch.sh | bash)
-    - FULL_IMAGE_NAME=${DOCKER_IMAGE_NAME}:${IMAGE_TAG}
+    - docker login -u ${DOCKER_HUB_USER} --password=${DOCKER_HUB_PASSWORD} harbor.dev.socialsys.ru
+    - FULL_IMAGE_NAME=${DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
     - echo $FULL_IMAGE_NAME
     - docker run --dns=8.8.8.8 -v $(pwd):/www -w /www --rm harbor.dev.socialsys.ru/public/node:18.17.0-alpine3.18 npm i
     - docker run --dns=8.8.8.8 -v $(pwd):/www -w /www --rm harbor.dev.socialsys.ru/public/node:18.17.0-alpine3.18 npm run build
