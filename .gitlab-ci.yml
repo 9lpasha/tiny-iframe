@@ -1,0 +1,32 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  DOCKER_IMAGE_NAME: docker-hub.hd.int/happydesk-new-portal-app
+  STACK_PROJECT_ID: 525
+  STACK_SERVICE_ENV_NAME: VERSION_NEW_PORTAL_APP
+
+# билд и пуш докер образа
+build docker image:
+  stage: build
+  only:
+    - master
+    - develop
+    - /^release\/20[0-9]{6}$/
+    - /^.*-test$/
+    - /^release\/(.*)$/
+    - /^feature\/(.*)$/
+    - /^HD\-(.*)$/
+  tags:
+    - docker-build-runner
+  script:
+    - git pull origin master
+    - IMAGE_TAG=$(curl http://gitlab.dev.iss.digital/ci-tools/common/-/raw/master/get-docker-image-name-from-branch.sh | bash)
+    - FULL_IMAGE_NAME=${DOCKER_IMAGE_NAME}:${IMAGE_TAG}
+    - echo $FULL_IMAGE_NAME
+    - docker run --dns=8.8.8.8 -v $(pwd):/www -w /www --rm node:18-alpine3.18 npm i
+    - docker run --dns=8.8.8.8 -v $(pwd):/www -w /www --rm node:18-alpine3.18 npm run build
+    - docker build --pull -t ${FULL_IMAGE_NAME} --label "git.hash=$CI_COMMIT_SHA" --label "git.branch=$CI_COMMIT_BRANCH" .
+    - docker push ${FULL_IMAGE_NAME}
+    - docker rmi ${FULL_IMAGE_NAME}
