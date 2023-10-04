@@ -1,4 +1,4 @@
-FROM nginx:stable-alpine3.17-slim
+FROM harbor.dev.socialsys.ru/public/nginx:stable-alpine3.17-slim
 
 ADD ./ /www/code
 
