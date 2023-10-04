@@ -1,0 +1,30 @@
+.App {
+  text-align: center;
+}
+
+#root {
+  height: 100vh;
+}
+
+.tox-statusbar__path-item {
+  display: none !important;
+}
+
+.tox-statusbar__branding {
+  display: none !important;
+}
+
+li:has(li::before) {
+  height: max-content;
+}
+
+.tox-tinymce{
+  border: unset!important;
+  border-radius: 4px!important;
+  height: 100% !important;
+}
+
+.tox:not(.tox-tinymce-inline) .tox-editor-header {
+  border-bottom: 1px solid #E2E5E9!important;
+  box-shadow: none!important;
+}
