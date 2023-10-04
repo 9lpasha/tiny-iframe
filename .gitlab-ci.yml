@@ -3,10 +3,8 @@ stages:
   - deploy
 
 variables:
-  DOCKER_IMAGE_NAME: docker-hub.hd.int/happydesk-new-portal-app
-  STACK_PROJECT_ID: 525
-  STACK_SERVICE_ENV_NAME: VERSION_NEW_PORTAL_APP
-
+  DOCKER_IMAGE_NAME: harbor.dev.socialsys.ru/happydesk/tiny-mce-editor
+  
 # билд и пуш докер образа
 build docker image:
   stage: build
