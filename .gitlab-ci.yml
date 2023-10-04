@@ -30,3 +30,21 @@ build docker image:
     - docker build --pull -t ${FULL_IMAGE_NAME} --label "git.hash=$CI_COMMIT_SHA" --label "git.branch=$CI_COMMIT_BRANCH" .
     - docker push ${FULL_IMAGE_NAME}
     - docker rmi ${FULL_IMAGE_NAME}
+
+deploy to test1:
+  stage: deploy
+  extends: .deploy
+  variables:
+    STACK_NAME: test1
+  when: manual
+
+.deploy:
+  stage: deploy
+  when: manual
+  tags:
+    - happydesk-test-swarm
+  script:
+    - FULL_IMAGE_NAME=${DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
+    - docker service update --with-registry-auth -q --image=$FULL_IMAGE_NAME --force ${STACK_NAME}_tinymce-editor
+    - curl http://gitlab.dev.iss.digital/ci-tools/common/-/raw/master/docker-stack-release.sh | STACK_SERVICE_VERSION=$CI_COMMIT_REF_SLUG bash
+
