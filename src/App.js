@@ -131,6 +131,7 @@ function App() {
       <Editor
         // продовый - nbwuxkn96vt295l4ltn1cgpvi3ytgnkgofk4dr3owmu7pg1u
         // тестовый - nokzoluxwt2joxkk39p4n94lkc903scm7ffu4yeggac4hhym
+        // eslint-disable-next-line
           apiKey={location.href === "https://support.portal.happydesk.ru/tinymce" ? "nbwuxkn96vt295l4ltn1cgpvi3ytgnkgofk4dr3owmu7pg1u" : "nokzoluxwt2joxkk39p4n94lkc903scm7ffu4yeggac4hhym"}
           init={tinyEditorConfig(language, files ? files.length : 0)}
           onInit={onInit}
