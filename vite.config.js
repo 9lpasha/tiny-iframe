@@ -28,7 +28,7 @@ export default defineConfig({
       },
     },
   },
-  base: TINYMCE_URL,
+  base: TINYMCE_URL === 'https://support.happydesk.ru/tinymce' ? '/tinymce' : '/test-tinymce',
   css: {
     preprocessorOptions: {
       less: {
