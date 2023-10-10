@@ -1,0 +1,1 @@
+process.env['PUBLIC_URL'] = process.env['TINYMCE_URL'] ? process.env['TINYMCE_URL'] : 'https://support.happydesk.ru/test-tinymce'
