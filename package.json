@@ -1,6 +1,5 @@
 {
   "name": "tinymce",
-  "homepage": "https://support.happydesk.ru/test-tinymce",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
