@@ -129,13 +129,16 @@ function App() {
 
   return isConnected ? (
       <Editor
-          apiKey="nbwuxkn96vt295l4ltn1cgpvi3ytgnkgofk4dr3owmu7pg1u" // fuap8hv77ephh20hmfv8azp7l6itmzzdr7dddh0y9dv2rwq3 работающий
+        // продовый - nbwuxkn96vt295l4ltn1cgpvi3ytgnkgofk4dr3owmu7pg1u
+        // тестовый - nokzoluxwt2joxkk39p4n94lkc903scm7ffu4yeggac4hhym
+          apiKey={location.href === "https://support.portal.happydesk.ru/tinymce" ? "nbwuxkn96vt295l4ltn1cgpvi3ytgnkgofk4dr3owmu7pg1u" : "nokzoluxwt2joxkk39p4n94lkc903scm7ffu4yeggac4hhym"}
           init={tinyEditorConfig(language, files ? files.length : 0)}
           onInit={onInit}
           onSubmit={onSubmit}
           onNodeChange={onNodeChange}
           onEditorChange={onEditorChange}
           onClick={toggleFlagForClickOnIframes}
+          rtc_unsupported_content_notification={false}
       />
   ) : <div/>;
 }
