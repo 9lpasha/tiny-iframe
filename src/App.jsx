@@ -142,7 +142,6 @@ function App() {
           onNodeChange={onNodeChange}
           onEditorChange={onEditorChange}
           onClick={toggleFlagForClickOnIframes}
-          rtc_unsupported_content_notification={false}
       />
   ) : <div/>;
 }
