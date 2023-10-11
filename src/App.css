@@ -28,3 +28,7 @@ li:has(li::before) {
   border-bottom: 1px solid #E2E5E9!important;
   box-shadow: none!important;
 }
+
+.tox-tinymce-aux {
+  display: none;
+}
