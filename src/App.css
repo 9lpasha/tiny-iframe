@@ -29,6 +29,6 @@ li:has(li::before) {
   box-shadow: none!important;
 }
 
-.tox-tinymce-aux {
+.tox-notifications-container {
   display: none;
 }
