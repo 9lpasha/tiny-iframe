@@ -1,4 +1,4 @@
-export const tinyEditorConfig = (language, filesLength) => {
+export const tinyEditorConfig = (language, filesLength, setOpenedTemplate, withTemplates, forComment) => {
   return {
     browser_spellcheck: true,
     language,
@@ -20,7 +20,7 @@ export const tinyEditorConfig = (language, filesLength) => {
     contextmenu: 'link image table',
     plugins:
       'importcss searchreplace autolink save directionality ' +
-      'code visualblocks visualchars fullscreen image link media template codesample ' +
+      'code visualblocks visualchars fullscreen image link media mediaembed template codesample ' +
       'table charmap pagebreak nonbreaking anchor insertdatetime advlist lists ' +
       'wordcount help charmap quickbars emoticons ' +
       'autocorrect typography inlinecss powerpaste',
@@ -29,7 +29,7 @@ export const tinyEditorConfig = (language, filesLength) => {
       'strikethrough backcolor forecolor | link image media table mergetags | ' +
       'addcomment showcomments | spellcheckdialog a11ycheck typography | align ' +
       'lineheight | checklist numlist bullist indent outdent | ' +
-      'emoticons charmap | removeformat code',
+      'emoticons charmap | removeformat code | customTemplates',
     quickbars_insert_toolbar: false,
     content_style:
       'p {\n' +
@@ -192,7 +192,65 @@ export const tinyEditorConfig = (language, filesLength) => {
       '}' +
       'a * {' +
       '  color: #745de2;\n' +
-      '}',
+      '}' +
+      '.mentions-modal {\n' +
+      '    position: absolute;\n' +
+      '    display: flex;\n' +
+      '    flex-direction: column;\n' +
+      '    min-width: 100px;\n' +
+      '    max-height: 150px;\n' +
+      '    overflow: auto;\n' +
+      '    background: white;\n' +
+      '    z-index: 100;\n' +
+      '    user-select: none;\n' +
+      '    -ms-user-select: none;\n' +
+      '    -moz-user-select: none;\n' +
+      '    -webkit-user-select: none;\n' +
+      '    left: 15px;\n' +
+      '}\n' +
+      '\n' +
+      '.mentions-modal-option {\n' +
+      '    padding: 7px 5px;\n' +
+      '    border-bottom: 1px solid #f1f1f1;\n' +
+      '    cursor: pointer;\n' +
+      '}\n' +
+      '\n' +
+      '.mentions-modal-option:hover {\n' +
+      '    background: #dcdcdc;\n' +
+      '}\n' +
+      '\n' +
+      '.mce-content-body .mentions-modal[contentEditable=false][data-mce-selected] {\n' +
+      '    cursor: unset;\n' +
+      '    outline: unset;\n' +
+      '    -webkit-user-modify: unset;\n' +
+      '}\n' +
+      '\n' +
+      '.mce-content-body .mentions-modal[contentEditable=false] {\n' +
+      '    -webkit-user-modify: unset;\n' +
+      '}\n' +
+      '\n' +
+      '.last-mention {\n' +
+      '    position: relative;\n' +
+      '}\n' +
+      '\n' +
+      'a.mention {\n' +
+      '    text-decoration: none;\n' +
+      '    color: #745de2;\n' +
+      '    background-color: #f0fbff;\n' +
+      '    padding: 1px 2px;\n' +
+      '    border-radius: 2px;\n' +
+      '    transition: all 1s ease;\n' +
+      '    cursor: pointer;\n' +
+      '}\n' +
+      '\n' +
+      'a.mention:hover {\n' +
+      '    color: #4ad09e;\n' +
+      '}\n' +
+      '\n' +
+      '.mentions-modal:has(div) {\n' +
+      '    border: 1px solid #f1f1f1;\n' +
+      '}' +
+      (forComment ? 'body {background: #e4f2fe;}' : ''),
     file_picker_callback: (cb) => {
       const input = document.createElement('input');
 
@@ -211,12 +269,20 @@ export const tinyEditorConfig = (language, filesLength) => {
 
           blobCache.add(blobInfo);
 
-          cb(blobInfo.blobUri(), { title: file.name });
+          cb(blobInfo.blobUri(), {title: file.name});
         });
         reader.readAsDataURL(file);
       });
 
       input.click();
     },
+    setup: (editor) => {
+      if (withTemplates) {
+        editor.ui.registry.addButton('customTemplates', {
+          text: 'Templates',
+          onAction: () => setOpenedTemplate(true)
+        });
+      }
+    }
   };
 };

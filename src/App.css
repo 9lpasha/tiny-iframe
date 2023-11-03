@@ -1,34 +1,82 @@
 .App {
-  text-align: center;
+    text-align: center;
 }
 
 #root {
-  height: 100vh;
+    height: 100vh;
 }
 
 .tox-statusbar__path-item {
-  display: none !important;
+    display: none !important;
 }
 
 .tox-statusbar__branding {
-  display: none !important;
+    display: none !important;
 }
 
 li:has(li::before) {
-  height: max-content;
+    height: max-content;
 }
 
-.tox-tinymce{
-  border: unset!important;
-  border-radius: 4px!important;
-  height: 100% !important;
+.tox-tinymce {
+    border: unset !important;
+    border-radius: 4px !important;
+    height: 100% !important;
 }
 
 .tox:not(.tox-tinymce-inline) .tox-editor-header {
-  border-bottom: 1px solid #E2E5E9!important;
-  box-shadow: none!important;
+    border-bottom: 1px solid #E2E5E9 !important;
+    box-shadow: none !important;
 }
 
 .tox-notifications-container {
-  display: none;
+    display: none;
+}
+
+.tox-dialog {
+    max-width: 520px;
+}
+
+.tox .tox-tbtn--select {
+    width: fit-content !important;
+}
+
+.mentions-modal {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    min-width: 100px;
+    max-height: 150px;
+    overflow: auto;
+    background: white;
+    z-index: 100;
+    user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    left: 15px;
+}
+
+.mentions-modal-option {
+    padding: 7px 5px;
+    border-bottom: 1px solid #f1f1f1;
+    cursor: pointer;
+}
+
+.mentions-modal-option:hover {
+    background: #dcdcdc;
+}
+
+.mce-content-body .mentions-modal[contentEditable=false][data-mce-selected] {
+    cursor: unset;
+    outline: unset;
+    -webkit-user-modify: unset;
+}
+
+.mce-content-body .mentions-modal[contentEditable=false] {
+    -webkit-user-modify: unset;
+}
+
+.mentions-modal:has(div) {
+    border: 1px solid #f1f1f1;
 }
