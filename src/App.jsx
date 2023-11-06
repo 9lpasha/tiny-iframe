@@ -1,8 +1,8 @@
-import './App.css';
 import {Editor} from "@tinymce/tinymce-react";
-
 import {useEffect, useRef, useState} from "react";
+
 import {tinyEditorConfig} from "./tinyEditorConfig";
+import './App.css';
 
 let timeout;
 let prevButton;
@@ -55,8 +55,11 @@ function App() {
   const [withTemplates, setWithTemplates] = useState(false);
   const [withMentions, setWithMentions] = useState(false);
   const [currentTarget, setCurrentTarget] = useState(null);
+
   const currentTargetRef = useRef(currentTarget);
   currentTargetRef.current = currentTarget;
+  const editorRef = useRef(null);
+  editorRef.current = editor;
 
   const postMessage = (data) => {
     window.parent.postMessage(data, "*");
@@ -107,8 +110,6 @@ function App() {
         }
         users = data.value.suggestions;
 
-        console.log(data);
-
         postMessage({type: 'connect', value: 'done'});
       } else if (data.type === 'changeFiles') {
         setFiles(data.value);
@@ -116,6 +117,15 @@ function App() {
         setDisabled(data.value);
       } else if (data.type === 'changeSuggestions') {
         users = data.value;
+      } else if (data.type === 'addVariable') {
+        const sel = editorRef.current.dom.doc.getSelection()
+
+        if (sel.getRangeAt && sel.rangeCount) {
+          const range = sel.getRangeAt(0);
+
+          range.deleteContents();
+          range.insertNode(document.createTextNode(data.value));
+        }
       } else if (data.type === 'remove') {
         editor.remove();
       }
@@ -139,6 +149,10 @@ function App() {
 
   const setOpenedTemplate = (opened) => {
     postMessage({type: 'setOpenedTemplate', value: opened});
+  };
+
+  const setOpenedVariables = (opened) => {
+    postMessage({type: 'setOpenedVariables', value: opened});
   };
 
   const toggleFlagForClickOnIframes = () => {
@@ -180,7 +194,7 @@ function App() {
     }
   };
 
-  const onEditorChange = value => {
+  const onEditorChange = () => {
     clearTimeout(timeout);
 
     timeout = setTimeout(() => {
@@ -278,7 +292,7 @@ function App() {
             })
 
             spanModal.style.left = x + 'px';
-            spanModal.style.top = y + 48 + 'px';
+            spanModal.style.top = y + document.querySelector('.tox-editor-header').offsetHeight + 'px';
             spanModal.style.display = 'fixed';
             document.body.appendChild(spanModal);
 
@@ -518,7 +532,8 @@ function App() {
         // продовый - nbwuxkn96vt295l4ltn1cgpvi3ytgnkgofk4dr3owmu7pg1u
         // тестовый - nokzoluxwt2joxkk39p4n94lkc903scm7ffu4yeggac4hhym
         apiKey={token || "nokzoluxwt2joxkk39p4n94lkc903scm7ffu4yeggac4hhym"}
-        init={tinyEditorConfig(language, files ? files.length : 0, setOpenedTemplate, withTemplates, !withMentions && withTemplates)}
+        init={tinyEditorConfig(language, files ? files.length : 0, setOpenedTemplate, withTemplates,
+          withMentions && !withTemplates, setOpenedVariables)}
         onInit={onInit}
         onSubmit={onSubmit}
         onNodeChange={onNodeChange}

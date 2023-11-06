@@ -1,4 +1,4 @@
-export const tinyEditorConfig = (language, filesLength, setOpenedTemplate, withTemplates, forComment) => {
+export const tinyEditorConfig = (language, filesLength, setOpenedTemplate, withTemplates, forComment, setOpenedVariables) => {
   return {
     browser_spellcheck: true,
     language,
@@ -10,6 +10,7 @@ export const tinyEditorConfig = (language, filesLength, setOpenedTemplate, withT
     automatic_uploads: true,
     file_picker_types: 'image',
     image_title: true,
+    convert_urls: false,
     menubar: false,
     statusbar: false,
     draggable_modal: true,
@@ -29,7 +30,7 @@ export const tinyEditorConfig = (language, filesLength, setOpenedTemplate, withT
       'strikethrough backcolor forecolor | link image media table mergetags | ' +
       'addcomment showcomments | spellcheckdialog a11ycheck typography | align ' +
       'lineheight | checklist numlist bullist indent outdent | ' +
-      'emoticons charmap | removeformat code | customTemplates',
+      'emoticons charmap | removeformat code | customTemplates variables',
     quickbars_insert_toolbar: false,
     content_style:
       'p {\n' +
@@ -283,6 +284,12 @@ export const tinyEditorConfig = (language, filesLength, setOpenedTemplate, withT
           onAction: () => setOpenedTemplate(true)
         });
       }
+
+      editor.ui.registry.addButton('variables', {
+        text: '?',
+        onAction: () => setOpenedVariables(true),
+      });
+
     }
   };
 };
