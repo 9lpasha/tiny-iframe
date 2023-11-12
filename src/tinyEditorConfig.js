@@ -177,7 +177,7 @@ export const tinyEditorConfig = (
       "    position: relative;" +
       "    margin: 16px 16px;" +
       "    padding-bottom: " +
-      (filesLength >= 2 ? "75px" : filesLength === 1 ? "29px" : "0px") +
+      (filesLength >= 1 ? "75px" : "0px") +
       "}" +
       "::-webkit-scrollbar {\n" +
       "  -webkit-appearance: none;\n" +
@@ -190,7 +190,7 @@ export const tinyEditorConfig = (
       "  -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);\n" +
       "}" +
       "body.files-2 { padding-bottom: 75px; }" +
-      "body.files-1 { padding-bottom: 29px; }" +
+      "body.files-1 { padding-bottom: 75px; }" +
       "body { font-family: Open Sans, sans-serif; }" +
       "p {\n" +
       "  display: block;\n" +
