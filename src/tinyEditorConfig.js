@@ -115,7 +115,6 @@ export const tinyEditorConfig = (
       "\n" +
       "img {\n" +
       "    padding: 0 10px 0 0;\n" +
-      "    // float: left;" +
       "}\n" +
       "p[style*=center] img {" +
       "    float: unset;" +
@@ -161,6 +160,13 @@ export const tinyEditorConfig = (
       "    transform: translate(-16px, 4px);" +
       "}\n" +
       "\n" +
+      "table,\n" +
+      "    td,\n" +
+      "    th,\n" +
+      "    tr,\n" +
+      "    tbody {\n" +
+      "      border: unset!important;\n" +
+      "    }" +
       "ul li[style^=list-style-type]::before {\n" +
       "    content: unset !important;\n" +
       "}" +
