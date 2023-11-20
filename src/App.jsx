@@ -17,11 +17,18 @@ const onResize = () => {
 
   if (css.length) {
     css[css.length - 1].innerHTML =
-      css[css.length - 1].innerHTML + "\n.tox-menu {max-height: " + maxHeightToxMenu + "px!important;}";
+      css[css.length - 1].innerHTML +
+      "\n.tox-menu {max-height: " +
+      maxHeightToxMenu +
+      "px!important;}";
   } else {
     const newcss = document.createElement("style");
 
-    newcss.innerHTML = newcss.innerHTML + "\n.tox-menu {max-height: " + maxHeightToxMenu + "px!important;}";
+    newcss.innerHTML =
+      newcss.innerHTML +
+      "\n.tox-menu {max-height: " +
+      maxHeightToxMenu +
+      "px!important;}";
     document.head.appendChild(newcss);
   }
 };
@@ -78,8 +85,12 @@ function App() {
         const classText = "tox-tinymce-files";
 
         if (n !== 0) {
-          node.classList.add(`${n >= 2 ? `${classText}-2` : n === 1 ? `${classText}-1` : ""}`);
-          node.classList.remove(`${n >= 2 ? `${classText}-1` : n === 1 ? `${classText}-2` : ""}`);
+          node.classList.add(
+            `${n >= 2 ? `${classText}-2` : n === 1 ? `${classText}-1` : ""}`,
+          );
+          node.classList.remove(
+            `${n >= 2 ? `${classText}-1` : n === 1 ? `${classText}-2` : ""}`,
+          );
         } else {
           node.classList.remove(`${classText}-2`, `${classText}-1`);
         }
@@ -138,7 +149,9 @@ function App() {
       editor.dom.doc.body.classList.remove("files-2");
       editor.dom.doc.body.classList.remove("files-1");
       if (files?.length >= 1) {
-        editor.dom.doc.body.classList.add(files?.length >= 2 ? "files-2" : "files-1");
+        editor.dom.doc.body.classList.add(
+          files?.length >= 2 ? "files-2" : "files-1",
+        );
       }
     }
   }, [files, editor, editor?.dom?.doc]);
@@ -271,7 +284,7 @@ function App() {
   const onNodeChange = (e) => {
     const img = e.element.querySelector("img");
 
-    if (img && !img.nextElementSibling /*  || img.nextElementSibling && img.nextElementSibling.tagName !== 'BR'*/) {
+    if (img && !img.nextElementSibling) {
       const br = document.createElement("br");
 
       if (img.nextElementSibling) {
