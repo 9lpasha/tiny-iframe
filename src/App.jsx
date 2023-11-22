@@ -17,18 +17,11 @@ const onResize = () => {
 
   if (css.length) {
     css[css.length - 1].innerHTML =
-      css[css.length - 1].innerHTML +
-      "\n.tox-menu {max-height: " +
-      maxHeightToxMenu +
-      "px!important;}";
+      css[css.length - 1].innerHTML + "\n.tox-menu {max-height: " + maxHeightToxMenu + "px!important;}";
   } else {
     const newcss = document.createElement("style");
 
-    newcss.innerHTML =
-      newcss.innerHTML +
-      "\n.tox-menu {max-height: " +
-      maxHeightToxMenu +
-      "px!important;}";
+    newcss.innerHTML = newcss.innerHTML + "\n.tox-menu {max-height: " + maxHeightToxMenu + "px!important;}";
     document.head.appendChild(newcss);
   }
 };
@@ -70,7 +63,23 @@ function App() {
   editorRef.current = editor;
 
   const postMessage = (data) => {
-    window.parent.postMessage(data, "*");
+    if (data.type === "save") {
+      const anchors = editorRef.current.dom.doc.querySelectorAll("a");
+      const filteredAnchors = [...anchors].filter((el) => el.getAttribute("data-userid"));
+
+      window.parent.postMessage(
+        {
+          ...data,
+          mentionedUsersIds: filteredAnchors.map((el) => ({
+            id: el.getAttribute("data-userid"),
+            type: el.getAttribute("data-type"),
+          })),
+        },
+        "*",
+      );
+    } else {
+      window.parent.postMessage(data, "*");
+    }
   };
 
   useEffect(() => {
@@ -85,12 +94,8 @@ function App() {
         const classText = "tox-tinymce-files";
 
         if (n !== 0) {
-          node.classList.add(
-            `${n >= 2 ? `${classText}-2` : n === 1 ? `${classText}-1` : ""}`,
-          );
-          node.classList.remove(
-            `${n >= 2 ? `${classText}-1` : n === 1 ? `${classText}-2` : ""}`,
-          );
+          node.classList.add(`${n >= 2 ? `${classText}-2` : n === 1 ? `${classText}-1` : ""}`);
+          node.classList.remove(`${n >= 2 ? `${classText}-1` : n === 1 ? `${classText}-2` : ""}`);
         } else {
           node.classList.remove(`${classText}-2`, `${classText}-1`);
         }
@@ -149,9 +154,7 @@ function App() {
       editor.dom.doc.body.classList.remove("files-2");
       editor.dom.doc.body.classList.remove("files-1");
       if (files?.length >= 1) {
-        editor.dom.doc.body.classList.add(
-          files?.length >= 2 ? "files-2" : "files-1",
-        );
+        editor.dom.doc.body.classList.add(files?.length >= 2 ? "files-2" : "files-1");
       }
     }
   }, [files, editor, editor?.dom?.doc]);
@@ -238,6 +241,8 @@ function App() {
 
           const neww = document.createElement("a");
           neww.href = users[i].url;
+          neww.setAttribute("data-userid", users[i].id);
+          neww.setAttribute("data-type", users[i].type);
           neww.className = "mention";
           neww.innerHTML = span.innerHTML;
           span.parentNode?.replaceChild(neww, span);
@@ -436,6 +441,8 @@ function App() {
 
                   const neww = document.createElement("a");
                   neww.href = filteredUsers[i].url;
+                  neww.setAttribute("data-userid", filteredUsers[i].id);
+                  neww.setAttribute("data-type", filteredUsers[i].type);
                   neww.className = "mention";
                   neww.innerHTML = lastMension.innerHTML;
                   lastMension.parentNode?.replaceChild(neww, lastMension);
@@ -508,6 +515,8 @@ function App() {
 
                 const neww = document.createElement("a");
                 neww.href = filteredUsers[i].url;
+                neww.setAttribute("data-userid", filteredUsers[i].id);
+                neww.setAttribute("data-type", filteredUsers[i].type);
                 neww.className = "mention";
                 neww.innerHTML = lastMension.innerHTML;
                 lastMension.parentNode?.replaceChild(neww, lastMension);
