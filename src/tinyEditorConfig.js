@@ -324,8 +324,6 @@ export const tinyEditorConfig = (
               "<span class='last-mention-after-button'>@</span>" +
               currentTarget().current.textContent.slice(caretPosition);
 
-            console.log(currentTarget().current.innerHTML);
-
             const range = editor.dom.doc.createRange();
             const sel = editor.dom.doc.getSelection();
 

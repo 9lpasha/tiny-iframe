@@ -209,8 +209,6 @@ function App() {
         spanModal.appendChild(div);
       }
 
-      console.log("dsada");
-
       spanModal.className = "mentions-modal";
       span.appendChild(spanModal);
       spanModal.style.display = "absolute";
