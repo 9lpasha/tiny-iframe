@@ -197,6 +197,7 @@ export const tinyEditorConfig = (
       "}" +
       "body.files-2 { padding-bottom: 75px; }" +
       "body.files-1 { padding-bottom: 75px; }" +
+      "body.files-0 { padding-bottom: 0px!important; }" +
       "body { font-family: Open Sans, sans-serif; }" +
       "p {\n" +
       "  display: block;\n" +
@@ -330,13 +331,10 @@ export const tinyEditorConfig = (
             range.setStart(currentTarget().current.querySelector(".last-mention-after-button").firstChild, 1);
             range.collapse(true);
 
-            // currentTarget().current.querySelector(".last-mention-after-button").className = "last-mention";
-
             sel.removeAllRanges();
             sel.addRange(range);
 
             editor.dom.doc.body.focus();
-            // mentionAction();
             setTimeout(() => mentionAction(), 500);
           },
         });

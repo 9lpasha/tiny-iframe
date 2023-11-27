@@ -36,7 +36,11 @@ export const countDogs = (str, pos) => {
     if (str[i] === "@") {
       n += 1;
     } else {
-      flag = true;
+      if (str[i].charCodeAt() === 160) {
+        n += 1;
+      } else {
+        flag = true;
+      }
     }
   }
 
@@ -45,6 +49,8 @@ export const countDogs = (str, pos) => {
 
 let users = [];
 let filteredUsers = [];
+let disabledTyping = false;
+let currentLastMention = null;
 
 function App() {
   const [editor, setEditor] = useState(null);
@@ -153,8 +159,11 @@ function App() {
     if (editor && editor.dom.doc) {
       editor.dom.doc.body.classList.remove("files-2");
       editor.dom.doc.body.classList.remove("files-1");
+      editor.dom.doc.body.classList.remove("files-0");
       if (files?.length >= 1) {
         editor.dom.doc.body.classList.add(files?.length >= 2 ? "files-2" : "files-1");
+      } else {
+        editor.dom.doc.body.classList.add("files-0");
       }
     }
   }, [files, editor, editor?.dom?.doc]);
@@ -309,8 +318,10 @@ function App() {
     if (withMentions) {
       if (e.element.className === "last-mention") {
         setCurrentTarget(e.element.parentNode);
+        currentLastMention = e.element;
       } else {
         setCurrentTarget(e.element);
+        currentLastMention = e.element;
       }
 
       if (e.element.parentNode.id === "_mce_caret" && e.element.className === "last-mention") {
@@ -328,7 +339,7 @@ function App() {
 
     timeout = setTimeout(() => {
       postMessage({ type: "save", value: editor.getContent() });
-    }, 500);
+    }, 800);
   };
 
   const onKeyPress = (e) => {
@@ -336,12 +347,15 @@ function App() {
 
     timeout = setTimeout(() => {
       postMessage({ type: "save", value: editor.getContent() });
-    }, 500);
+    }, 800);
+
+    if (e.key === "@" || e.key === " ") disabledTyping = true;
 
     if (withMentions)
       setTimeout(() => {
         if (e.key === "@") {
           mentionAction(currentTargetRef);
+          disabledTyping = false;
         } else {
           prevButton = e.key;
 
@@ -352,54 +366,33 @@ function App() {
             if (spanModal) document.body.removeChild(spanModal);
 
             if (lastMension) {
-              const span = editor.dom.doc.createElement("span");
+              const caretPosition = editorRef.current.dom.doc.getSelection().anchorOffset || 0;
+              const random = "random" + String(Number(Math.random().toFixed(5)) * 100000).slice(0, 5);
 
-              currentTargetRef.current.textContent = currentTargetRef.current.textContent.slice(0, -1);
-              span.innerHTML = "&nbsp;";
-
-              if (currentTargetRef.current.nextSibling) {
-                currentTargetRef.current.parentNode.insertBefore(span, currentTargetRef.current.nextSibling);
-              } else {
-                currentTargetRef.current.parentNode?.appendChild(span);
-              }
+              currentLastMention.innerHTML =
+                currentLastMention.textContent.slice(0, caretPosition - 1) +
+                "<span class=" +
+                random +
+                ">&nbsp;</span>" +
+                currentLastMention.textContent.slice(caretPosition);
 
               lastMension.className = "";
 
-              if (currentTargetRef.current.tagName === "A") {
-                const span = editor.dom.doc.createElement("span");
+              const range = editor.dom.doc.createRange();
+              const sel = editor.dom.doc.getSelection();
 
-                currentTargetRef.current.textContent = currentTargetRef.current.textContent.slice(0, -1);
-                span.innerHTML = "&nbsp;";
+              const lastSpan = editorRef.current.dom.doc.querySelector(`.${random}`);
 
-                if (currentTargetRef.current.nextSibling) {
-                  currentTargetRef.current.parentNode.insertBefore(span, currentTargetRef.current.nextSibling);
-                } else {
-                  currentTargetRef.current.parentNode?.appendChild(span);
-                }
+              range.setStart(lastSpan, 1);
+              range.collapse(true);
 
-                const range = editor.dom.doc.createRange();
-                const sel = editor.dom.doc.getSelection();
+              sel.removeAllRanges();
+              sel.addRange(range);
 
-                range.setStart(span, 1);
-                range.collapse(true);
-
-                sel.removeAllRanges();
-                sel.addRange(range);
-
-                editor.dom.doc.body.focus();
-              } else {
-                const range = editor.dom.doc.createRange();
-                const sel = editor.dom.doc.getSelection();
-
-                range.setStart(span, 1);
-                range.collapse(true);
-
-                sel.removeAllRanges();
-                sel.addRange(range);
-
-                editor.dom.doc.body.focus();
-              }
+              editor.dom.doc.body.focus();
             }
+
+            disabledTyping = false;
           } else {
             const lastMension = currentTargetRef.current.parentNode.querySelector(".last-mention");
 
@@ -466,7 +459,7 @@ function App() {
             }
           }
         }
-      }, 500);
+      }, 400);
   };
 
   const onKeyUp = (e) => {
@@ -539,13 +532,36 @@ function App() {
             }
           }
         }
-      }, 500);
+      }, 400);
+
+    if (e.key === "Enter") {
+      const html = editorRef.current.dom.doc.querySelector("html");
+      html.scrollTo({
+        top: html.scrollTop + 30,
+        duration: 0,
+        behavior: "auto",
+      });
+
+      const spanModal = document.body.querySelector(".mentions-modal");
+
+      if (spanModal) document.body.removeChild(spanModal);
+
+      setTimeout(() => {
+        const lastMensions = currentTargetRef.current.parentNode.querySelectorAll(".last-mention");
+        [...lastMensions].forEach((el) => (el.className = ""));
+      }, 400);
+    }
   };
 
   const onKeyDown = (e) => {
     if (withMentions) {
       const node = currentTargetRef.current.parentNode.querySelector(".last-mention");
+
       if (e.key === "@" && node?.textContent === "@") {
+        e.preventDefault();
+      }
+
+      if (disabledTyping) {
         e.preventDefault();
       }
     }
