@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { tinyEditorConfig } from "./tinyEditorConfig";
 import "./App.css";
+import { compareEditorVersions } from "./helpers";
 
 let timeout;
 let prevButton;
@@ -121,7 +122,7 @@ function App() {
         setIsConnected(true);
         setDisabled(data.value.disabled);
         if (editor) {
-          if (data.value.text !== editor.getContent()) editor.setContent(data.value.text);
+          if (!compareEditorVersions(data.value.text, editor.getContent())) editor.setContent(data.value.text);
 
           if (!data.value.text) {
             const spanModal = document.body.querySelector(".mentions-modal");
@@ -349,7 +350,10 @@ function App() {
       postMessage({ type: "save", value: editor.getContent() });
     }, 800);
 
-    if (e.key === "@" || e.key === " ") disabledTyping = true;
+    const prepareNode = currentTargetRef.current.parentNode || currentTargetRef.current;
+    const lastMension = prepareNode.querySelector(".last-mention");
+
+    if (e.key === "@" || (lastMension && e.key === " ")) disabledTyping = true;
 
     if (withMentions)
       setTimeout(() => {
@@ -555,7 +559,8 @@ function App() {
 
   const onKeyDown = (e) => {
     if (withMentions) {
-      const node = currentTargetRef.current.parentNode.querySelector(".last-mention");
+      const prepareNode = currentTargetRef.current.parentNode || currentTargetRef.current;
+      const node = prepareNode.querySelector(".last-mention");
 
       if (e.key === "@" && node?.textContent === "@") {
         e.preventDefault();
