@@ -1,34 +1,46 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import inject from 'rollup-plugin-inject';
-import { config } from 'dotenv';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import inject from "rollup-plugin-inject";
+import { config } from "dotenv";
+import { randomBytes } from "crypto";
 
 config();
 
-const { TINYMCE_URL } = process.env;
+function generateRandomString(length) {
+  return randomBytes(Math.ceil(length / 2))
+    .toString("hex")
+    .slice(0, length);
+}
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  build: { outDir: 'build', },
+  build: {
+    outDir: "build",
+    rollupOptions: {
+      output: {
+        assetFileNames: `assets/[name]-${generateRandomString(8)}[extname]`,
+      },
+    },
+  },
   plugins: [
     react(),
     inject({
-      include: ['src/**/*.js', 'src/**/*.jsx'],
+      include: ["src/**/*.js", "src/**/*.jsx"],
     }),
   ],
   esbuild: {
-    loader: 'jsx',
+    loader: "jsx",
     include: /.*\.jsx?$/,
-    exclude: []
+    exclude: [],
   },
   optimizeDeps: {
     esbuildOptions: {
       loader: {
-        '.js': 'jsx',
+        ".js": "jsx",
       },
     },
   },
-  base: '/', // TINYMCE_URL === 'https://support.happydesk.ru/tinymce' ? '/tinymce' : '/test-tinymce',
+  base: "/",
   css: {
     preprocessorOptions: {
       less: {
