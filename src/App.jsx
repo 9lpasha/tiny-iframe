@@ -3,6 +3,7 @@ import { Editor } from "@tinymce/tinymce-react";
 
 import { useEffect, useState } from "react";
 import { tinyEditorConfig } from "./tinyEditorConfig";
+import { fileUpload } from "./fileUtils";
 
 let timeout;
 
@@ -59,10 +60,10 @@ function App() {
 
         if (n !== 0) {
           node.classList.add(
-            `${n >= 2 ? `${classText}-2` : n === 1 ? `${classText}-1` : ""}`,
+            `${n >= 2 ? `${classText}-2` : n === 1 ? `${classText}-1` : ""}`
           );
           node.classList.remove(
-            `${n >= 2 ? `${classText}-1` : n === 1 ? `${classText}-2` : ""}`,
+            `${n >= 2 ? `${classText}-1` : n === 1 ? `${classText}-2` : ""}`
           );
         } else {
           node.classList.remove(`${classText}-2`, `${classText}-1`);
@@ -78,6 +79,8 @@ function App() {
         setFiles(data.value.files);
         setLanguage(data.value.language);
         setIsConnected(true);
+        localStorage.setItem("HDAuthorizationToken", data.authToken);
+        localStorage.setItem("baseURL", data.baseURL);
         if (editor) {
           if (data.value.text !== editor.getContent())
             editor.setContent(data.value.text);
@@ -100,7 +103,7 @@ function App() {
       editor.dom.doc.body.classList.remove("files-1");
       if (files?.length >= 1) {
         editor.dom.doc.body.classList.add(
-          files?.length >= 2 ? "files-2" : "files-1",
+          files?.length >= 2 ? "files-2" : "files-1"
         );
       }
     }
@@ -153,17 +156,83 @@ function App() {
     window.tinymceEditor = editor;
   };
 
+  const onDrop = (e, dataTransfer) => {
+    // Отменяем стандартное поведение вставки
+    e.preventDefault();
+
+    const files = [...dataTransfer.files];
+
+    if (files.find(file => file.type.indexOf("image") !== -1)) {
+      console.log("вставка картинок: ", [...files.filter(file => file.type.indexOf("image") !== -1)]);
+
+      fileUpload(files.filter(file => file.type.indexOf("image") !== -1))
+        .then((response) => {
+          const tmpFiles = response.data;
+
+          tmpFiles.forEach(file => {
+            editor.execCommand("mceInsertContent", false, "<img src=\"" + localStorage.getItem("baseURL") + file.link + "\">");
+          });
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+
+    if (files.length && files.find(file => file.type.indexOf("image") === -1)) {
+      console.log("добавить к файлам: ", files.filter(file => file.type.indexOf("image") === -1));
+    }
+
+    // Получаем HTML-разметку из буфера обмена
+    const pastedHTML = dataTransfer.getData("text/html");
+
+    editor.execCommand("mceInsertContent", false, pastedHTML);
+  };
+
+  const onPaste = (e, editor, dataTransfer) => {
+    // Отменяем стандартное поведение вставки
+    e.preventDefault();
+
+    const files = [...dataTransfer.files];
+
+    if (files.find(file => file.type.indexOf("image") !== -1)) {
+      console.log("вставка картинок: ", [...files.filter(file => file.type.indexOf("image") !== -1)]);
+
+      fileUpload(files.filter(file => file.type.indexOf("image") !== -1))
+        .then((response) => {
+          const tmpFiles = response.data;
+
+          tmpFiles.forEach(file => {
+            editor.execCommand("mceInsertContent", false, "<img src=\"" + localStorage.getItem("baseURL") + file.link + "\">");
+          });
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+
+    if (files.length && files.find(file => file.type.indexOf("image") === -1)) {
+      console.log("добавить к файлам: ", files.filter(file => file.type.indexOf("image") === -1));
+    }
+
+    // Получаем HTML-разметку из буфера обмена
+    const pastedHTML = dataTransfer.getData("text/html");
+
+    editor.execCommand("mceInsertContent", false, pastedHTML);
+  };
+
   return isConnected ? (
     <Editor
       // продовый - nbwuxkn96vt295l4ltn1cgpvi3ytgnkgofk4dr3owmu7pg1u
       // тестовый - nokzoluxwt2joxkk39p4n94lkc903scm7ffu4yeggac4hhym
       apiKey={token || "nokzoluxwt2joxkk39p4n94lkc903scm7ffu4yeggac4hhym"}
-      init={tinyEditorConfig(language, files ? files.length : 0)}
+      init={tinyEditorConfig(language, files ? files.length : 0, localStorage.getItem("HDAuthorizationToken"))}
       onInit={onInit}
       onSubmit={onSubmit}
       onNodeChange={onNodeChange}
       onEditorChange={onEditorChange}
       onClick={toggleFlagForClickOnIframes}
+      onPaste={(e, editor) => onPaste(e, editor, e.dataTransfer)}
+      onDrop={(e) => onDrop(e, e.dataTransfer)}
     />
   ) : (
     <div />
