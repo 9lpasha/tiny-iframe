@@ -3,13 +3,17 @@ import { Editor } from "@tinymce/tinymce-react";
 
 import { useEffect, useState } from "react";
 import { tinyEditorConfig } from "./tinyEditorConfig";
-import { fileUpload } from "./fileUtils";
+import { fileUpload, postMessage } from "./fileUtils";
 
 let timeout;
 
 // eslint-disable-next-line
 const urlParams = new URLSearchParams(location.search);
 const token = urlParams.get("token");
+export const fileUploadSettings = {
+  uploadMode: 0,
+  callback: null
+};
 
 const onResize = () => {
   const maxHeightToxMenu = document.body.clientHeight - 175;
@@ -92,9 +96,25 @@ function App() {
         setFiles(data.value);
       } else if (data.type === "remove") {
         editor.remove();
+      } else if (data.type === "image_insert") {
+        const tmpFiles = data.value;
+
+        if (fileUploadSettings.uploadMode) {
+          const tmpFile = tmpFiles[0];
+
+          fileUploadSettings.callback(localStorage.getItem("baseURL") + tmpFile.link, { title: tmpFile.original_name });
+        } else {
+          tmpFiles.forEach(file => {
+            editor.execCommand("mceInsertContent", false, "<img src=\"" + localStorage.getItem("baseURL") + file.link + "\">");
+          });
+        }
       }
     };
     window.addEventListener("message", messageHandler);
+
+    return () => {
+      window.removeEventListener("message", messageHandler);
+    };
   }, [editor]);
 
   useEffect(() => {
@@ -164,22 +184,15 @@ function App() {
 
     if (files.find(file => file.type.indexOf("image") !== -1)) {
       console.log("вставка картинок: ", [...files.filter(file => file.type.indexOf("image") !== -1)]);
+      fileUploadSettings.uploadMode = 0;
 
-      fileUpload(files.filter(file => file.type.indexOf("image") !== -1))
-        .then((response) => {
-          const tmpFiles = response.data;
-
-          tmpFiles.forEach(file => {
-            editor.execCommand("mceInsertContent", false, "<img src=\"" + localStorage.getItem("baseURL") + file.link + "\">");
-          });
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+      postMessage({ type: "image_insert", value: files.filter(file => file.type.indexOf("image") !== -1) });
     }
 
     if (files.length && files.find(file => file.type.indexOf("image") === -1)) {
       console.log("добавить к файлам: ", files.filter(file => file.type.indexOf("image") === -1));
+
+      postMessage({ type: "file_insert", value: files.filter(file => file.type.indexOf("image") === -1) });
     }
 
     // Получаем HTML-разметку из буфера обмена
@@ -193,7 +206,7 @@ function App() {
       // продовый - nbwuxkn96vt295l4ltn1cgpvi3ytgnkgofk4dr3owmu7pg1u
       // тестовый - nokzoluxwt2joxkk39p4n94lkc903scm7ffu4yeggac4hhym
       apiKey={token || "nokzoluxwt2joxkk39p4n94lkc903scm7ffu4yeggac4hhym"}
-      init={tinyEditorConfig(language, files ? files.length : 0, localStorage.getItem("HDAuthorizationToken"))}
+      init={tinyEditorConfig(language, files ? files.length : 0)}
       onInit={onInit}
       onSubmit={onSubmit}
       onNodeChange={onNodeChange}

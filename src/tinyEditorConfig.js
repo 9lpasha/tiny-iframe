@@ -1,6 +1,7 @@
-import { fileUpload } from "./fileUtils";
+import { postMessage } from "./fileUtils";
+import { fileUploadSettings } from "./App";
 
-export const tinyEditorConfig = (language, filesLength, authToken) => {
+export const tinyEditorConfig = (language, filesLength) => {
   return {
     browser_spellcheck: true,
     language,
@@ -204,15 +205,10 @@ export const tinyEditorConfig = (language, filesLength, authToken) => {
       input.setAttribute("accept", "image/*");
 
       input.addEventListener("change", (e) => {
-        fileUpload([e.target.files[0]])
-          .then((response) => {
-            const tmpFile = response.data[0];
+        fileUploadSettings.uploadMode = 1;
+        fileUploadSettings.callback = cb;
 
-            cb(localStorage.getItem("baseURL") + tmpFile.link, { title: tmpFile.original_name });
-          })
-          .catch((err) => {
-            console.error(err);
-          });
+        postMessage({ type: "image_insert", value: [e.target.files[0]] });
       });
 
       input.click();

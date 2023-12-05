@@ -39,3 +39,7 @@ export const fileUpload = (files) => {
     });
   }
 };
+
+export const postMessage = (data) => {
+  window.parent.postMessage(data, "*");
+};
