@@ -156,39 +156,7 @@ function App() {
     window.tinymceEditor = editor;
   };
 
-  const onDrop = (e, dataTransfer) => {
-    // Отменяем стандартное поведение вставки
-    e.preventDefault();
-
-    const files = [...dataTransfer.files];
-
-    if (files.find(file => file.type.indexOf("image") !== -1)) {
-      console.log("вставка картинок: ", [...files.filter(file => file.type.indexOf("image") !== -1)]);
-
-      fileUpload(files.filter(file => file.type.indexOf("image") !== -1))
-        .then((response) => {
-          const tmpFiles = response.data;
-
-          tmpFiles.forEach(file => {
-            editor.execCommand("mceInsertContent", false, "<img src=\"" + localStorage.getItem("baseURL") + file.link + "\">");
-          });
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    }
-
-    if (files.length && files.find(file => file.type.indexOf("image") === -1)) {
-      console.log("добавить к файлам: ", files.filter(file => file.type.indexOf("image") === -1));
-    }
-
-    // Получаем HTML-разметку из буфера обмена
-    const pastedHTML = dataTransfer.getData("text/html");
-
-    editor.execCommand("mceInsertContent", false, pastedHTML);
-  };
-
-  const onPaste = (e, editor, dataTransfer) => {
+  const pasteDropProcessing = (e, dataTransfer) => {
     // Отменяем стандартное поведение вставки
     e.preventDefault();
 
@@ -231,8 +199,8 @@ function App() {
       onNodeChange={onNodeChange}
       onEditorChange={onEditorChange}
       onClick={toggleFlagForClickOnIframes}
-      onPaste={(e, editor) => onPaste(e, editor, e.dataTransfer)}
-      onDrop={(e) => onDrop(e, e.dataTransfer)}
+      onPaste={(e, editor) => pasteDropProcessing(e, e.clipboardData)}
+      onDrop={(e) => pasteDropProcessing(e, e.dataTransfer)}
     />
   ) : (
     <div />
