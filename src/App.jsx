@@ -3,7 +3,6 @@ import { Editor } from "@tinymce/tinymce-react";
 
 import { useEffect, useState } from "react";
 import { tinyEditorConfig } from "./tinyEditorConfig";
-import { fileUpload, postMessage } from "./fileUtils";
 
 let timeout;
 

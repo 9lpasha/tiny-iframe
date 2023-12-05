@@ -1,4 +1,3 @@
-import { postMessage } from "./fileUtils";
 import { fileUploadSettings } from "./App";
 
 export const tinyEditorConfig = (language, filesLength) => {
