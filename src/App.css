@@ -31,6 +31,7 @@ li:has(li::before) {
 
 .tox-notifications-container {
     display: none;
+    visibility: hidden;
 }
 
 .tox-dialog {
