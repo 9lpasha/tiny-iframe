@@ -7,5 +7,9 @@ export const compareEditorVersions = (fromSaas, fromIframe) => {
     }
   }
 
+  if (fromSaas.length === 0 && fromIframe.length >= 2) {
+    return false;
+  }
+
   return n <= 2;
 };
