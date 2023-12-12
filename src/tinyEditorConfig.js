@@ -1,4 +1,4 @@
-import { countDogs } from "./App";
+import { countDogs, fileUploadSettings } from "./App";
 
 export const tinyEditorConfig = (
   language,
@@ -280,20 +280,10 @@ export const tinyEditorConfig = (
       input.setAttribute("accept", "image/*");
 
       input.addEventListener("change", (e) => {
-        const file = e.target.files[0];
-        const reader = new FileReader();
+        fileUploadSettings.uploadMode = 1;
+        fileUploadSettings.callback = cb;
 
-        reader.addEventListener("load", () => {
-          const id = `blobid${new Date().getTime()}`;
-          const blobCache = window.tinymceEditor.editorUpload.blobCache;
-          const base64 = reader.result.split(",")[1];
-          const blobInfo = blobCache.create(id, file, base64);
-
-          blobCache.add(blobInfo);
-
-          cb(blobInfo.blobUri(), { title: file.name });
-        });
-        reader.readAsDataURL(file);
+        postMessage({ type: "image_insert", value: [e.target.files[0]] });
       });
 
       input.click();

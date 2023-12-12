@@ -11,6 +11,10 @@ let prevButton;
 // eslint-disable-next-line
 const urlParams = new URLSearchParams(location.search);
 const token = urlParams.get("token");
+export const fileUploadSettings = {
+  uploadMode: 0,
+  callback: null
+};
 
 const onResize = () => {
   const maxHeightToxMenu = document.body.clientHeight - 175;
@@ -121,6 +125,8 @@ function App() {
         setWithMentions(data.value.withMentions);
         setIsConnected(true);
         setDisabled(data.value.disabled);
+        localStorage.setItem("HDAuthorizationToken", data.authToken);
+        localStorage.setItem("baseURL", data.baseURL);
         if (editor) {
           if (!compareEditorVersions(data.value.text, editor.getContent())) editor.setContent(data.value.text);
 
@@ -151,20 +157,35 @@ function App() {
         }
       } else if (data.type === "remove") {
         editor.remove();
+      } else if (data.type === "image_insert") {
+        const tmpFiles = data.value;
+
+        if (fileUploadSettings.uploadMode) {
+          const tmpFile = tmpFiles[0];
+
+          fileUploadSettings.callback(localStorage.getItem("baseURL") + tmpFile.link, { title: tmpFile.original_name });
+        } else {
+          tmpFiles.forEach(file => {
+            editor.execCommand("mceInsertContent", false, "<img src=\"" + localStorage.getItem("baseURL") + file.link + "\">");
+          });
+        }
       }
     };
     window.addEventListener("message", messageHandler);
+
+    return () => {
+      window.removeEventListener("message", messageHandler);
+    };
   }, [editor]);
 
   useEffect(() => {
     if (editor && editor.dom.doc) {
       editor.dom.doc.body.classList.remove("files-2");
       editor.dom.doc.body.classList.remove("files-1");
-      editor.dom.doc.body.classList.remove("files-0");
       if (files?.length >= 1) {
-        editor.dom.doc.body.classList.add(files?.length >= 2 ? "files-2" : "files-1");
-      } else {
-        editor.dom.doc.body.classList.add("files-0");
+        editor.dom.doc.body.classList.add(
+          files?.length >= 2 ? "files-2" : "files-1"
+        );
       }
     }
   }, [files, editor, editor?.dom?.doc]);
@@ -577,6 +598,31 @@ function App() {
     window.tinymceEditor = editor;
   };
 
+  const pasteDropProcessing = (e, dataTransfer) => {
+    // Отменяем стандартное поведение вставки
+    e.preventDefault();
+
+    const files = [...dataTransfer.files];
+
+    if (files.find(file => file.type.indexOf("image") !== -1)) {
+      console.log("вставка картинок: ", [...files.filter(file => file.type.indexOf("image") !== -1)]);
+      fileUploadSettings.uploadMode = 0;
+
+      postMessage({ type: "image_insert", value: files.filter(file => file.type.indexOf("image") !== -1) });
+    }
+
+    if (files.length && files.find(file => file.type.indexOf("image") === -1)) {
+      console.log("добавить к файлам: ", files.filter(file => file.type.indexOf("image") === -1));
+
+      postMessage({ type: "file_insert", value: files.filter(file => file.type.indexOf("image") === -1) });
+    }
+
+    // Получаем HTML-разметку из буфера обмена
+    const pastedHTML = dataTransfer.getData("text/html");
+
+    editor.execCommand("mceInsertContent", false, pastedHTML);
+  };
+
   return isConnected ? (
     <>
       <Editor
@@ -603,6 +649,8 @@ function App() {
         onKeyUp={onKeyUp}
         onEditorChange={onEditorChange}
         onClick={toggleFlagForClickOnIframes}
+        onPaste={(e, editor) => pasteDropProcessing(e, e.clipboardData)}
+        onDrop={(e) => pasteDropProcessing(e, e.dataTransfer)}
       />
       {disabled && (
         <div
