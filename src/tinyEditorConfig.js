@@ -283,7 +283,7 @@ export const tinyEditorConfig = (
         fileUploadSettings.uploadMode = 1;
         fileUploadSettings.callback = cb;
 
-        postMessage({ type: "image_insert", value: [e.target.files[0]] });
+        window.parent.postMessage({ type: "image_insert", value: [e.target.files[0]] }, "*");
       });
 
       input.click();
