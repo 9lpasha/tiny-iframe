@@ -602,6 +602,25 @@ function App() {
     // Отменяем стандартное поведение вставки
     e.preventDefault();
 
+    // Получаем HTML-разметку из буфера обмена
+    const pastedHTML = dataTransfer.getData("text/html");
+    const pastedText = dataTransfer.getData("text/plain");
+
+    if (pastedHTML) {
+      const body = document.createElement('html');
+      body.innerHTML = pastedHTML;
+      const bodyChildren = body.querySelector('body').children
+      if (bodyChildren.length === 1 && bodyChildren[0].tagName === 'IMG') {} else {
+        editor.execCommand("mceInsertContent", false, pastedHTML);
+        return;
+      }
+    }
+
+    if (pastedText) {
+      editor.execCommand("mceInsertContent", false, pastedText);
+      return;
+    }
+
     const files = [...dataTransfer.files];
 
     if (files.find(file => file.type.indexOf("image") !== -1)) {
@@ -616,11 +635,6 @@ function App() {
 
       postMessage({ type: "file_insert", value: files.filter(file => file.type.indexOf("image") === -1) });
     }
-
-    // Получаем HTML-разметку из буфера обмена
-    const pastedHTML = dataTransfer.getData("text/html");
-
-    editor.execCommand("mceInsertContent", false, pastedHTML);
   };
 
   return isConnected ? (
